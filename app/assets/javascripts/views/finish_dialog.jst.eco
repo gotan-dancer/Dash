@@ -1,0 +1,31 @@
+<div class="content">
+  <h1>Time is Up!</h1>
+
+  <div class="text">
+    You've successfully mixed <strong><%= @level.potions_mixed %></strong> potions
+    using <strong><%= @level.ingredients_used %></strong> ingredients.
+  </div>
+
+  <% if @stored: %>
+    <div class="scores">
+      <h2>Highscores:</h2>
+      <table>
+        <% for score in @scores: %>
+          <tr class="<%= 'current' if score.current %>">
+            <td class="name"><%= score.name %></td>
+            <td class="value"><%= score.value %></td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+
+    <button class="replay">Replay</button>
+  <% else: %>
+    <div class="name_prompt">
+      Enter your name to save score:<br />
+      <input type="text" name="name" id="name" autofocus="autofocus"/>
+    </div>
+
+    <button class="save">Save Score</button>
+  <% end %>
+</div>

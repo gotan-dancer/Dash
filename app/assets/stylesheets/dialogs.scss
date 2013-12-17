@@ -1,0 +1,105 @@
+.dialog {
+  z-index: 1000;
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  top: 100px;
+  left: calc(50% - 250px);
+
+  background: image-url('dialog.png');
+
+  .content {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 470px;
+
+    color: #ffefe6;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7);
+    text-align: center;
+
+    h1 {
+      margin-top: 0;
+    }
+
+    .text {
+      strong{
+        color: #ff914d;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.dialog_overlay {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 999;
+}
+
+.finish.dialog {
+  .scores {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    padding: 10px;
+    width: 250px;
+    margin: 20px auto;
+
+    .current {
+      font-size: 22px;
+      color: #ff914d;
+      font-weight: bold;
+    }
+
+    h2 {
+      margin: 0;
+    }
+
+    table {
+      margin: auto;
+
+      td {
+        padding: 3px 5px;
+      }
+    }
+  }
+
+
+  .replay {
+    font-size: 30px;
+  }
+
+  input[type=text]{
+    font-size: 22px;
+    line-height: 22px;
+    margin-bottom: 10px;
+    text-align: center;
+    padding: 3px;
+  }
+
+  .save {
+    font-size: 22px;
+  }
+}
+
+.tutorial.dialog {
+  .start, .close {
+    font-size: 22px;
+  }
+
+  ol {
+    margin: 20px 0;
+    padding-right: 170px;
+    height: 230px;
+    text-align: left;
+    background: image-url('tutorial.png') top right no-repeat;
+
+    li {
+      margin-bottom: 5px;
+    }
+  }
+}

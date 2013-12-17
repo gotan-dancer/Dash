@@ -1,0 +1,23 @@
+<div class="content">
+  <h1>How To Play</h1>
+
+  <div class="text">
+    You're the Alchemist, you're mixing potions from ingredients, and you're in rush -<br>
+    <strong>you only get one minute</strong><br>
+    to make as many potions as you can!
+
+    <ol>
+      <li>Swap items of the same color to match 3 or more of them in a row</li>
+      <li>One ingredient of the matched color will be put to the potion</li>
+      <li>Collect all required ingredients to complete potion</li>
+      <li>Each successfully mixed potion gives you more time</li>
+      <li>Don't forget to save your highscore on our server</li>
+    </ol>
+  </div>
+
+  <% if @level.timer.currentValue() == settings.timeLimit: %>
+    <button class="start">Start Game</button>
+  <% else: %>
+    <button class="close">Close</button>
+  <% end %>
+</div>

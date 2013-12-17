@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%= javascript_tag do %>
+    var load_started_at = Date.now();
+  <% end %>
+
+  <title><%= I18n.t("game.name") %></title>
+
+  <%= stylesheet_link_tag    "application", media: "all" %>
+  <%= csrf_meta_tags %>
+
+  <% if Settings.facebook_app_id %>
+    <meta property="fb:app_id"      content="<%= Settings.facebook_app_id %>" />
+    <meta property="og:type"        content="website"/>
+    <meta property="og:site_name"   content="<%= I18n.t("game.name") %>"/>
+    <meta property="og:image"       content="<%= image_url('logo.jpg') %>"/>
+    <meta property="og:title"       content="<%= I18n.t("game.name") %>"/>
+    <meta property="og:description" content="<%= I18n.t("game.description") %>"/>
+    <meta property="og:url"         content="<%= root_url %>" />
+  <% end %>
+
+  <% if Settings.google_analytics_id %>
+    <script type="text/javascript">
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', '<%= Settings.google_analytics_id %>', '<%= Settings.domain %>');
+      ga('send', 'pageview');
+
+    </script>
+  <% end %>
+</head>
+<body>
+  <% if Settings.facebook_app_id %>
+  <% end %>
+
+  <div id='preloader'>
+    <div class='progress'></div>
+    <div class="label">Loading...</div>
+  </div>
+
+  <div id="game_screen">
+    <%= yield %>
+
+    <div id="social_bar">
+      <% if Settings.facebook_app_id %>
+        <div class="facebook">
+          <div class="fb-like" data-href="<%= root_url %>" data-width="200" data-colorscheme="dark" data-layout="button_count" data-show-faces="true" data-send="false"></div>
+          <div id="fb-root"></div>
+          <script>(function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=<%= Settings.facebook_app_id %>";
+            fjs.parentNode.insertBefore(js, fjs);
+          }(document, 'script', 'facebook-jssdk'));</script>
+        </div>
+      <% end %>
+
+      <% if Settings.twitter_login %>
+        <div class="twitter">
+          <a href="https://twitter.com/share" class="twitter-share-button" data-via="<%= Settings.twitter_login %>">Tweet</a>
+          <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+        </div>
+      <% end %>
+
+      <div class="google">
+        <div class="g-plus" data-action="share" data-width="200"></div>
+        <script type="text/javascript">
+          window.___gcfg = {
+            lang: 'en-US'
+          };
+          (function() {
+            var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+            po.src = 'https://apis.google.com/js/plusone.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+          })();
+        </script>
+      </div>
+    </div>
+  </div>
+
+  <%= javascript_include_tag "application" %>
+</body>
+</html>
