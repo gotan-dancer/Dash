@@ -190,14 +190,14 @@ window.LevelAnimator = class extends Animator
       y: if 0 <= y < settings.mapSize then y else if y < 0 then 0 else settings.mapSize - 1
     }
 
-  animateIngredientSwap: (ingredient1, ingredient2)->
+  animateIngredientSwap: (ingredient1) -> #ingredient2)->
     @swap_animation_started = Date.now()
 
     sprite1 = @ingredients[ingredient1.x][ingredient1.y]
-    sprite2 = @ingredients[ingredient2.x][ingredient2.y]
+    #sprite2 = @ingredients[ingredient2.x][ingredient2.y]
 
-    sprite1.swappingWith = ingredient2
-    sprite2.swappingWith = ingredient1
+    sprite1.swappingWith = ingredient1 #2!
+    #sprite2.swappingWith = ingredient1
 
   updateIngredientSprite: (sprite)->
     if sprite.swappingWith?

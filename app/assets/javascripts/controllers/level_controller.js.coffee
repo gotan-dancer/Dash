@@ -92,21 +92,21 @@ window.LevelController = class extends BaseController
 
     return unless @selected_ingredient
 
-    position = @animator.mousePositionToIngredientPosition(@mouse_position)
+    # position = @animator.mousePositionToIngredientPosition(@mouse_position)
 
-    if position.x < @selected_ingredient.x
-      clicked_ingredient = @ingredients.get(@selected_ingredient.x - 1, @selected_ingredient.y)
-    else if position.x > @selected_ingredient.x
-      clicked_ingredient = @ingredients.get(@selected_ingredient.x + 1, @selected_ingredient.y)
-    else if position.y < @selected_ingredient.y
-      clicked_ingredient = @ingredients.get(@selected_ingredient.x, @selected_ingredient.y - 1)
-    else if position.y > @selected_ingredient.y
-      clicked_ingredient = @ingredients.get(@selected_ingredient.x, @selected_ingredient.y + 1)
+    # if position.x < @selected_ingredient.x
+    #   clicked_ingredient = @ingredients.get(@selected_ingredient.x - 1, @selected_ingredient.y)
+    # else if position.x > @selected_ingredient.x
+    #   clicked_ingredient = @ingredients.get(@selected_ingredient.x + 1, @selected_ingredient.y)
+    # else if position.y < @selected_ingredient.y
+    #   clicked_ingredient = @ingredients.get(@selected_ingredient.x, @selected_ingredient.y - 1)
+    # else if position.y > @selected_ingredient.y
+    #   clicked_ingredient = @ingredients.get(@selected_ingredient.x, @selected_ingredient.y + 1)
 
-    return unless clicked_ingredient
+    # return unless clicked_ingredient
 
-    if @ingredients.isMatch(@selected_ingredient, clicked_ingredient)
-      @.swapIngredients(@selected_ingredient, clicked_ingredient)
+    if @ingredients.isMatch(@selected_ingredient) #, clicked_ingredient)
+      @.swapIngredients(@selected_ingredient) #, clicked_ingredient)
 
     @selected_ingredient.toggleSelection()
 
@@ -122,10 +122,10 @@ window.LevelController = class extends BaseController
 
     FinishDialogController.show(@)
 
-  swapIngredients: (ingredient1, ingredient2)->
-    [ingredient1.type, ingredient2.type] = [ingredient2.type, ingredient1.type]
+  swapIngredients: (ingredient1) -> #ingredient2)->
+    #[ingredient1.type, ingredient2.type] = [ingredient2.type, ingredient1.type]
 
-    @animator.animateIngredientSwap(ingredient1, ingredient2)
+    @animator.animateIngredientSwap(ingredient1)#, ingredient2)
 
     sounds.playSound('swap')
 

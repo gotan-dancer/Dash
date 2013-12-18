@@ -7,15 +7,15 @@ window.IngredientMap = class
 
       for y in [0 .. settings.mapSize - 1]
         @ingredients[x][y] = new Ingredient(x,y, Ingredient.randomType())
-        @ingredients[x][y].type = Ingredient.randomType() while @.hasMatches(@ingredients[x][y])
+        #@ingredients[x][y].type = Ingredient.randomType() while @.hasMatches(@ingredients[x][y])
 
   get: (x, y)->
     @ingredients[x][y]
 
-  isMatch: (ingredient1, ingredient2)->
-    @.isCoordinateMatch(ingredient1, ingredient2) and
-    @.isTypeMatch(ingredient1, ingredient2) and
-    @.isPurposeMatch(ingredient1, ingredient2)
+  isMatch: (ingredient1) -> #, ingredient2)->
+    #@.isCoordinateMatch(ingredient1, ingredient2) and
+    #@.isTypeMatch(ingredient1, ingredient2) and
+    @.isPurposeMatch(ingredient1) #, ingredient2)
 
   isCoordinateMatch: (ingredient1, ingredient2)->
     (ingredient1.x - 1 <= ingredient2.x <= ingredient1.x + 1 and ingredient1.y == ingredient2.y) or
@@ -24,15 +24,15 @@ window.IngredientMap = class
   isTypeMatch: (ingredient1, ingredient2)->
     ingredient1.type != ingredient2.type
 
-  isPurposeMatch: (ingredient1, ingredient2)->
-    [ingredient1.type, ingredient2.type] = [ingredient2.type, ingredient1.type] # Temporary change types to emulate position change
+  isPurposeMatch: (ingredient1) -> #, ingredient2)->
+    #[ingredient1.type, ingredient2.type] = [ingredient2.type, ingredient1.type] # Temporary change types to emulate position change
 
     matches1 = @.hasMatches(ingredient1)
-    matches2 = @.hasMatches(ingredient2)
+    #matches2 = @.hasMatches(ingredient2)
 
-    [ingredient1.type, ingredient2.type] = [ingredient2.type, ingredient1.type] # Return types back
+    #[ingredient1.type, ingredient2.type] = [ingredient2.type, ingredient1.type] # Return types back
 
-    matches1 or matches2
+    matches1 #or matches2
 
   hasMatches: (ingredient)->
     for match in @.matchesOf(ingredient)
