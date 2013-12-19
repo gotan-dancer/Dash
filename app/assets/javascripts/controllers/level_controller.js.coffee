@@ -9,6 +9,9 @@ window.LevelController = class extends BaseController
     @ingredients = new IngredientMap()
     @selected_ingredient = null
 
+    @selected_position_x = -1 #
+    @selected_position_y = -1 #
+
     @mouse_position = {x: 0, y: 0}
 
     @animator = new LevelAnimator(@)
@@ -73,6 +76,8 @@ window.LevelController = class extends BaseController
       @selected_ingredient = @ingredients.get(position.x, position.y)
       @selected_ingredient.toggleSelection()
 
+      @selected_position_x = position.x # !
+      @selected_position_y = position.y # !
   onMouseMove: (e)=>
     e.preventDefault()
 
@@ -92,7 +97,7 @@ window.LevelController = class extends BaseController
 
     return unless @selected_ingredient
 
-    if @ingredients.isMatch(@selected_ingredient) 
+    if @ingredients.isMatch(@selected_position_x,@selected_position_y) 
       @.swapIngredients(@selected_ingredient) 
 
     @selected_ingredient.toggleSelection()
@@ -116,7 +121,7 @@ window.LevelController = class extends BaseController
     sounds.playSound('swap')
 
   checkMatches: ->
-    @exploding = @ingredients.getExplodingIngredients()
+    @exploding = @ingredients.getExplodingIngredients(@selected_position_x,@selected_position_y) # !
 
     return if @exploding.length == 0
 
@@ -165,4 +170,4 @@ window.LevelController = class extends BaseController
     @.updatePotion()
 
   onAffectedAnimationFinished: ->
-    @.checkMatches()
+     @.checkMatches()
