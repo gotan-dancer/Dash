@@ -16,7 +16,7 @@ window.IngredientMap = class
       for y in [0 .. settings.mapSize - 1]
         @explode_map[x][y] = false
 
-    @selected_type = -1
+  #  @selected_type = -1
 
   # isTypeEqual: (x, y) ->
   #   @explode_map[x][y] = true
@@ -45,13 +45,14 @@ window.IngredientMap = class
     matches1
 
   hasMatches: (selected_position_x, selected_position_y) ->
-    @selected_type = @ingredients[selected_position_x][selected_position_y]
+#    selected_type = @.get(selected_position_x, selected_position_y)
+    selected_type = @ingredients[selected_position_x][selected_position_y].type
 
     for x in [0 .. settings.mapSize - 1]
       for y in [0 .. settings.mapSize - 1]
         @explode_map[x][y] = false
 
-    @.solve(selected_position_x, selected_position_y)
+    @.solve(selected_position_x, selected_position_y, selected_type)
 
     solve_count = 0
 
@@ -80,22 +81,22 @@ window.IngredientMap = class
       @ingredients[ingredient.x]?[ingredient.y + 1]?.type == @ingredients[ingredient.x]?[ingredient.y + 2]?.type == ingredient.type
     ]
 
-  solve: (x, y) ->
+  solve: (x, y, selected_type) ->
     if @explode_map[x][y] == true
       return 
 
     if x < 0 or x > settings.mapSize - 1 or y < 0 or y > settings.mapSize - 1
       return
 
-    if @ingredients[x][y] != @selected_type
+    if @ingredients[x][y].type != selected_type
       return
     else
       @explode_map[x][y] = true
 
-    solve(x-1,y)
-    solve(x+1,y)
-    solve(x,y-1)
-    solve(x,y+1)
+    @.solve(x-1,y,selected_type)
+    @.solve(x+1,y,selected_type)
+    @.solve(x,y-1,selected_type)
+    @.solve(x,y+1,selected_type)
 
 
   getExplodingIngredients: (selected_position_x, selected_position_y) ->
