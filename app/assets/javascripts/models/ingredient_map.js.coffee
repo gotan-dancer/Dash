@@ -70,16 +70,16 @@ window.IngredientMap = class
 
     # false
 
-  matchesOf: (ingredient)->
-    [
-      @ingredients[ingredient.x - 2]?[ingredient.y]?.type == @ingredients[ingredient.x - 1]?[ingredient.y]?.type == ingredient.type
-      @ingredients[ingredient.x - 1]?[ingredient.y]?.type == @ingredients[ingredient.x + 1]?[ingredient.y]?.type == ingredient.type
-      @ingredients[ingredient.x + 1]?[ingredient.y]?.type == @ingredients[ingredient.x + 2]?[ingredient.y]?.type == ingredient.type
+  # matchesOf: (ingredient)->
+  #   [
+  #     @ingredients[ingredient.x - 2]?[ingredient.y]?.type == @ingredients[ingredient.x - 1]?[ingredient.y]?.type == ingredient.type
+  #     @ingredients[ingredient.x - 1]?[ingredient.y]?.type == @ingredients[ingredient.x + 1]?[ingredient.y]?.type == ingredient.type
+  #     @ingredients[ingredient.x + 1]?[ingredient.y]?.type == @ingredients[ingredient.x + 2]?[ingredient.y]?.type == ingredient.type
 
-      @ingredients[ingredient.x]?[ingredient.y - 2]?.type == @ingredients[ingredient.x]?[ingredient.y - 1]?.type == ingredient.type
-      @ingredients[ingredient.x]?[ingredient.y - 1]?.type == @ingredients[ingredient.x]?[ingredient.y + 1]?.type == ingredient.type
-      @ingredients[ingredient.x]?[ingredient.y + 1]?.type == @ingredients[ingredient.x]?[ingredient.y + 2]?.type == ingredient.type
-    ]
+  #     @ingredients[ingredient.x]?[ingredient.y - 2]?.type == @ingredients[ingredient.x]?[ingredient.y - 1]?.type == ingredient.type
+  #     @ingredients[ingredient.x]?[ingredient.y - 1]?.type == @ingredients[ingredient.x]?[ingredient.y + 1]?.type == ingredient.type
+  #     @ingredients[ingredient.x]?[ingredient.y + 1]?.type == @ingredients[ingredient.x]?[ingredient.y + 2]?.type == ingredient.type
+  #   ]
 
   solve: (x, y, selected_type) ->
     if @explode_map[x][y] == true
@@ -100,10 +100,10 @@ window.IngredientMap = class
 
 
   getExplodingIngredients: (selected_position_x, selected_position_y) ->
-    result = []
 
-    alert "Hy!"
-    #result.push(ingredient) if @.hasMatches(selected_position_x, selected_position_y)
+    result = null
+
+    result = @explode_map if @.hasMatches(selected_position_x, selected_position_y)
 
     result
 

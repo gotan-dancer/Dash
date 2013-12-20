@@ -121,20 +121,33 @@ window.LevelController = class extends BaseController
     sounds.playSound('swap')
 
   checkMatches: ->
+
     @exploding = @ingredients.getExplodingIngredients(@selected_position_x,@selected_position_y) # !
 
-    return if @exploding.length == 0
+    return if @exploding == null
 
     sounds.playSound('explode')
 
-    for ingredient in @exploding
-      ingredient.exploding = true
+#    for ingredient in @exploding
+#      ingredient.exploding = true
 
     @animator.animateExplosion(@exploding)
 
-    @score += @ingredients.calculateExplodingScore()
 
-    @ingredients_used += @exploding.length
+    # @exploding = @ingredients.getExplodingIngredients() 
+
+    # return if @exploding.length == 0
+
+    # sounds.playSound('explode')
+
+    # for ingredient in @exploding
+    #   ingredient.exploding = true
+
+    # @animator.animateExplosion(@exploding)
+
+    # @score += @ingredients.calculateExplodingScore()
+
+    # @ingredients_used += @exploding.length
 
   checkAffected: ->
     for ingredient in @exploding
@@ -170,4 +183,4 @@ window.LevelController = class extends BaseController
     @.updatePotion()
 
   onAffectedAnimationFinished: ->
-     @.checkMatches()
+    # @.checkMatches()

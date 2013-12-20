@@ -259,8 +259,13 @@ window.LevelAnimator = class extends Animator
   animateExplosion: (ingredients)->
     @explosion_animation_started = Date.now()
 
-    for ingredient in ingredients
-      @ingredients[ingredient.x][ingredient.y].exploding = true
+    for x in [0 .. settings.mapSize - 1]
+      for y in [0 .. settings.mapSize - 1]
+        if ingredients[x][y] == true
+          @ingredients[x][y].exploding = true       
+
+    # for ingredient in ingredients
+    #   @ingredients[ingredient.x][ingredient.y].exploding = true
 
   isExplosionAnimationFinished: ->
     Date.now() - @explosion_animation_started > @.explosionAnimationSpeed
