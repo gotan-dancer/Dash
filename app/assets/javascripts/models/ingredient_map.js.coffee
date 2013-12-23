@@ -16,17 +16,17 @@ window.IngredientMap = class
       for y in [0 .. settings.mapSize - 1]
         @explode_map[x][y] = false
 
-  #  @animator = new LevelAnimator(@)
+    @animator = new LevelAnimator(@)
 
   #  @selected_type = -1
 
   # isTypeEqual: (x, y) ->
   #   @explode_map[x][y] = true
 
-  # clearMap: ->
-  #   for x in [0 .. settings.mapSize - 1]
-  #     for y in [0 .. settings.mapSize - 1]
-  #       @explode_map[x][y] = false
+  clearMap: ->
+    for x in [0 .. settings.mapSize - 1]
+      for y in [0 .. settings.mapSize - 1]
+        @explode_map[x][y] = false
 
   get: (x, y)->
     @ingredients[x][y]
@@ -119,25 +119,25 @@ window.IngredientMap = class
 
   checkAffectedIngredients: (exploded)->
 
-    displacements = []
+    #displacements = []
 
     for y in [settings.mapSize - 1 .. 1]
       for x in [0 .. settings.mapSize - 1]
         if exploded[x][y]
           for z in [y .. 1]
             @ingredients[x][z].type = @ingredients[x][z-1].type
-            @explode_map[x][z] = @explode_map[x][z-1] 
-    #        @animator.animateAffected([@ingredients[x][z],1])
-            displacements.push([@ingredients[x][z],1])
+            @explode_map[x][z] = @explode_map[x][z-1]
+            @animator.animateAffected([@ingredients[x][z],1])
+    #        displacements.push([@ingredients[x][z],1])
 
     for x in [0 .. settings.mapSize - 1]
       if exploded[x][0]
-        @ingredients[x][0] = Ingredient.randomType()
+        @ingredients[x][0].type = Ingredient.randomType()
         @explode_map[x][0] = false
-    #    @animator.animateAffected([@ingredients[x][0],1])
-        displacements.push([@ingredients[x][0],1])
+        @animator.animateAffected([@ingredients[x][0],1])
+    #    displacements.push([@ingredients[x][0],1])
 
-    displacements
+    #displacements
 
 
     # displacements = []
