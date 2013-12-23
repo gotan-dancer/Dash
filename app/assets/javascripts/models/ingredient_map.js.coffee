@@ -16,6 +16,8 @@ window.IngredientMap = class
       for y in [0 .. settings.mapSize - 1]
         @explode_map[x][y] = false
 
+  #  @animator = new LevelAnimator(@)
+
   #  @selected_type = -1
 
   # isTypeEqual: (x, y) ->
@@ -116,38 +118,60 @@ window.IngredientMap = class
     # result
 
   checkAffectedIngredients: (exploded)->
+
     displacements = []
 
-    groups = _.groupBy(exploded, (e)-> e.x )
+    for y in [settings.mapSize - 1 .. 1]
+      for x in [0 .. settings.mapSize - 1]
+        if exploded[x][y]
+          for z in [y .. 1]
+            @ingredients[x][z].type = @ingredients[x][z-1].type
+            @explode_map[x][z] = @explode_map[x][z-1] 
+    #        @animator.animateAffected([@ingredients[x][z],1])
+            displacements.push([@ingredients[x][z],1])
 
-    for column, x in @ingredients
-      continue unless groups[x]?
-
-      displace = 0
-      displace_cells = []
-
-      for y in [column.length - 1 .. 0]
-        ingredient = column[y]
-
-        if exploded.indexOf(ingredient) != -1 # Exploded cell
-          displace_cells.push(ingredient)
-
-        if exploded.indexOf(ingredient) == -1 or y == 0
-          if displace_cells.length > 0 # There are some cells in stack
-            for c in displace_cells
-              @.updateWithDisplacedType(c, displace + displace_cells.length)
-
-              displacements.push([c, displace + displace_cells.length])
-
-            displace += displace_cells.length
-            displace_cells = []
-
-          if displace > 0
-            @.updateWithDisplacedType(ingredient, displace)
-
-            displacements.push([ingredient, displace])
+    for x in [0 .. settings.mapSize - 1]
+      if exploded[x][0]
+        @ingredients[x][0] = Ingredient.randomType()
+        @explode_map[x][0] = false
+    #    @animator.animateAffected([@ingredients[x][0],1])
+        displacements.push([@ingredients[x][0],1])
 
     displacements
+
+
+    # displacements = []
+
+    # groups = _.groupBy(exploded, (e)-> e.x )
+
+    # for column, x in @ingredients
+    #   continue unless groups[x]?
+
+    #   displace = 0
+    #   displace_cells = []
+
+    #   for y in [column.length - 1 .. 0]
+    #     ingredient = column[y]
+
+    #     if exploded.indexOf(ingredient) != -1 # Exploded cell
+    #       displace_cells.push(ingredient)
+
+    #     if exploded.indexOf(ingredient) == -1 or y == 0
+    #       if displace_cells.length > 0 # There are some cells in stack
+    #         for c in displace_cells
+    #           @.updateWithDisplacedType(c, displace + displace_cells.length)
+
+    #           displacements.push([c, displace + displace_cells.length])
+
+    #         displace += displace_cells.length
+    #         displace_cells = []
+
+    #       if displace > 0
+    #         @.updateWithDisplacedType(ingredient, displace)
+
+    #         displacements.push([ingredient, displace])
+
+    # displacements
 
 
   updateWithDisplacedType: (ingredient, displace)->

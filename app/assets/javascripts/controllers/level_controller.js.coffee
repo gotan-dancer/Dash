@@ -145,23 +145,28 @@ window.LevelController = class extends BaseController
 
     # @animator.animateExplosion(@exploding)
 
-    # @score += @ingredients.calculateExplodingScore()
+    # @score += @ingredients.calculateExplodingScore() # Later
 
-    # @ingredients_used += @exploding.length
+    # @ingredients_used += @exploding.length # Later
 
   checkAffected: ->
-    for ingredient in @exploding
-      ingredient.exploding = false
-
-    collected = @potion.checkCollectedIngredients(@exploding)
-
-    @animator.animateCollected(collected)
-
     affected = @ingredients.checkAffectedIngredients(@exploding)
 
-    @animator.animateAffected(affected)
+    @animator.animateAffected(affected) # ?
 
-    @exploding = null
+
+    # for ingredient in @exploding
+    #   ingredient.exploding = false
+
+    # collected = @potion.checkCollectedIngredients(@exploding) # Later
+
+    # @animator.animateCollected(collected) # Later
+
+    # affected = @ingredients.checkAffectedIngredients(@exploding)
+
+    # @animator.animateAffected(affected)
+
+    # @exploding = null
 
   updatePotion: ->
     return unless @potion.isComplete()
