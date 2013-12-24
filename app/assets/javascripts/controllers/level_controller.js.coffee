@@ -58,6 +58,9 @@ window.LevelController = class extends BaseController
     if @timer.currentValue() == 0
       @.finish()
 
+    # if @timer.currentValue() % 10 == 0 #
+    #   @ingredients.isCombinations()    #
+
   onMouseDown: (e)=>
     e.preventDefault()
 
@@ -132,7 +135,6 @@ window.LevelController = class extends BaseController
 #      ingredient.exploding = true
 
     @animator.animateExplosion(@exploding)
-
 
     # @exploding = @ingredients.getExplodingIngredients() 
 

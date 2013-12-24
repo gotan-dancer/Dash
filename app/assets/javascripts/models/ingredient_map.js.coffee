@@ -100,9 +100,6 @@ window.IngredientMap = class
     @.solve(x,y-1,selected_type)
     @.solve(x,y+1,selected_type)
 
-    return
-
-
   getExplodingIngredients: (selected_position_x, selected_position_y) ->
 
     result = null
@@ -193,11 +190,10 @@ window.IngredientMap = class
         if @explode_map[x][y]
           result += 1
 
-    #alert "Current score" + result
+    #alert "Current score =" + result
 
     result
 
-    
     # result = []
 
     # for x in [0 .. settings.mapSize - 1]
@@ -230,3 +226,27 @@ window.IngredientMap = class
     #   sum += settings.scores[count]
 
     # sum
+
+  isCombinations: ->
+    busy_map = []
+
+    for x in [0 .. settings.mapSize - 1]
+      busy_map[x] = []
+      for y in [0 .. settings.mapSize - 1]
+        busy_map[x][y] = false
+
+    for x in [0 .. settings.mapSize - 1]
+      for y in [0 .. settings.mapSize - 1]
+        if busy_map[x][y] == false
+          currentCombination = null
+          currentCombination = getExplodingIngredients[x][y]
+          if currentCombination
+            # Save in busy_map
+            for i in [0 .. settings.mapSize - 1]
+              for j in [0 .. settings.mapSize - 1]
+                if currentCombination[i][j]
+                  busy_map[i][j] = currentCombination[i][j]
+            # Increment count
+            isCombinationsCount += 1
+
+    alert "Combinations count = " + isCombinationsCount
