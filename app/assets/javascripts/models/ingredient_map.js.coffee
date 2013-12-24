@@ -100,6 +100,8 @@ window.IngredientMap = class
     @.solve(x,y-1,selected_type)
     @.solve(x,y+1,selected_type)
 
+    return
+
 
   getExplodingIngredients: (selected_position_x, selected_position_y) ->
 
@@ -184,35 +186,47 @@ window.IngredientMap = class
       ingredient.type = Ingredient.randomType() while @.hasMatches(ingredient)
 
   calculateExplodingScore: ->
-    result = []
+    result = 0
 
     for x in [0 .. settings.mapSize - 1]
-      horizontal = 0
-
       for y in [0 .. settings.mapSize - 1]
-        if @ingredients[x][y].exploding
-          horizontal += 1
-        else if horizontal >= 3
-          result.push(horizontal)
-          horizontal = 0
+        if @explode_map[x][y]
+          result += 1
 
-      result.push(horizontal) if horizontal >= 3
+    #alert "Current score" + result
 
-    for y in [0 .. settings.mapSize - 1]
-      vertical = 0
+    result
 
-      for x in [0 .. settings.mapSize - 1]
-        if @ingredients[x][y].exploding
-          vertical += 1
-        else if vertical >= 3
-          result.push(vertical)
-          vertical = 0
+    
+    # result = []
 
-      result.push(vertical) if vertical >= 3
+    # for x in [0 .. settings.mapSize - 1]
+    #   horizontal = 0
 
-    sum = 0
+    #   for y in [0 .. settings.mapSize - 1]
+    #     if @ingredients[x][y].exploding
+    #       horizontal += 1
+    #     else if horizontal >= 3
+    #       result.push(horizontal)
+    #       horizontal = 0
 
-    for count in result
-      sum += settings.scores[count]
+    #   result.push(horizontal) if horizontal >= 3
 
-    sum
+    # for y in [0 .. settings.mapSize - 1]
+    #   vertical = 0
+
+    #   for x in [0 .. settings.mapSize - 1]
+    #     if @ingredients[x][y].exploding
+    #       vertical += 1
+    #     else if vertical >= 3
+    #       result.push(vertical)
+    #       vertical = 0
+
+    #   result.push(vertical) if vertical >= 3
+
+    # sum = 0
+
+    # for count in result
+    #   sum += settings.scores[count]
+
+    # sum

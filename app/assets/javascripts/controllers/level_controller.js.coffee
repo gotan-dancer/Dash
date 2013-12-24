@@ -145,7 +145,7 @@ window.LevelController = class extends BaseController
 
     # @animator.animateExplosion(@exploding)
 
-    # @score += @ingredients.calculateExplodingScore() # Later
+    @score += @ingredients.calculateExplodingScore() # Later
 
     # @ingredients_used += @exploding.length # Later
 
@@ -153,8 +153,10 @@ window.LevelController = class extends BaseController
     
     for y in [settings.mapSize - 1 .. 1]
       repeat_flag = true
+
+      affected = []
+
       while repeat_flag
-        affected = []
         for x in [0 .. settings.mapSize - 1]
           if @exploding[x][y]
             repeat_flag = true
@@ -172,7 +174,7 @@ window.LevelController = class extends BaseController
           else
             repeat_flag = false
 
-        @animator.animateAffected(affected) # ?
+      @animator.animateAffected(affected) # ?
 
     @ingredients.clearMap()
 
