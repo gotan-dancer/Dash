@@ -58,8 +58,10 @@ window.LevelController = class extends BaseController
     if @timer.currentValue() == 0
       @.finish()
 
-    # if @timer.currentValue() % 10 == 0 #
-    #   @ingredients.isCombinations()    #
+    # Разобраться с таймером
+    if @timer.currentValue() % 10 == 1 #
+      @ingredients.isCombinations() #
+    #   alert "Hy" # 
 
   onMouseDown: (e)=>
     e.preventDefault()
@@ -136,20 +138,7 @@ window.LevelController = class extends BaseController
 
     @animator.animateExplosion(@exploding)
 
-    # @exploding = @ingredients.getExplodingIngredients() 
-
-    # return if @exploding.length == 0
-
-    # sounds.playSound('explode')
-
-    # for ingredient in @exploding
-    #   ingredient.exploding = true
-
-    # @animator.animateExplosion(@exploding)
-
     @score += @ingredients.calculateExplodingScore() # Later
-
-    # @ingredients_used += @exploding.length # Later
 
   checkAffected: ->
     
@@ -179,11 +168,6 @@ window.LevelController = class extends BaseController
       @animator.animateAffected(affected) # ?
 
     @ingredients.clearMap()
-
-    #affected = @ingredients.checkAffectedIngredients(@exploding)
-
-    #@animator.animateAffected(affected) # ?
-
 
     # for ingredient in @exploding
     #   ingredient.exploding = false
