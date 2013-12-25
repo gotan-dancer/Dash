@@ -159,4 +159,5 @@ window.IngredientMap = class
             # Increment count
             isCombinationsCount += 1
 
-    alert "Combinations count = " + isCombinationsCount
+    isCombinationsCount
+    #alert "Combinations count = " + isCombinationsCount

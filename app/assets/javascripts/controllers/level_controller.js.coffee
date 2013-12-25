@@ -24,6 +24,9 @@ window.LevelController = class extends BaseController
     @potions_mixed = 0
     @ingredients_used = 0
 
+    @last_explosion = null
+    @waiting = 0
+
   show: ->
     @.setupEventListeners()
 
@@ -58,10 +61,24 @@ window.LevelController = class extends BaseController
     if @timer.currentValue() == 0
       @.finish()
 
-    # Разобраться с таймером
-    if @timer.currentValue() % 10 == 1 #
-      @ingredients.isCombinations() #
-    #   alert "Hy" # 
+    combinationCount = 0
+
+    if @last_explosion != null
+      @waiting = @last_explosion - @timer.currentValue()
+
+    #combinationCount = @ingredients.isCombinations()
+
+    if @waiting % 6 == 1
+      combinationCount = @ingredients.isCombinations() 
+      if combinationCount == 0
+        # Create good combination
+        alert "Create good combination"
+
+    if @waiting % 6 == 5
+      combinationCount = @ingredients.isCombinations() 
+      if combinationCount != 0
+        # Wait 5 seconds for max combination's lighting
+        alert combinationCount
 
   onMouseDown: (e)=>
     e.preventDefault()
@@ -202,4 +219,7 @@ window.LevelController = class extends BaseController
     @.updatePotion()
 
   onAffectedAnimationFinished: ->
+    @last_explosion = null
+    @last_explosion = @timer.currentValue()
+    
     # @.checkMatches()

@@ -123,6 +123,10 @@ window.LevelAnimator = class extends Animator
       if @collected_animation_started and @.isCollectedAnimationFinished()
         @collected_animation_started = null
 
+    # if @last_explosion not null and @last_explosion > 5.seconds.ago
+    #   @last_explosion = null
+    #   @ingredients.isCombinations()
+    
       @.updateSpriteStates()
 
     super
