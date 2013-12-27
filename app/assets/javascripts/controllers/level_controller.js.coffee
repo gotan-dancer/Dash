@@ -137,20 +137,10 @@ window.LevelController = class extends BaseController
           del_x[k] = -1
           del_y[k] = -1
           
-          del_x[k] = addCeilCandidate[addCeilIndex[k]] / 9
+          del_x[k] = Math.floor(addCeilCandidate[addCeilIndex[k]] / 9)
           del_y[k] = addCeilCandidate[addCeilIndex[k]] % 9
 
           alert del_x[k] + ' ' + del_y[k] + ' ' + addCeilMap[del_x[k]][del_y[k]]
-
-        # for x in [0 .. settings.mapSize - 1]
-        #   for y in [0 .. settings.mapSize - 1]
-        #     index = 0
-        #     if addCeilMap[x][y] != ''
-        #       index += 1
-        #       for k in [0 .. 2]
-        #         if index == addCeilIndex[k]
-        #           #@ingredients.get(x,y).type = addCeilMap[x][y]
-        #           alert x + ' ' + y + ' ' + addCeilMap[x][y]
 
         # animate() 
         # <--
