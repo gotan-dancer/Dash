@@ -63,10 +63,11 @@ window.IngredientMap = class
         if @explode_map[x][y]
           solve_count = solve_count + 1
 
-    if solve_count > 2
-      return true
-    else
-      return false
+    solve_count
+    # if solve_count > 2
+    #   return true
+    # else
+    #   return false
 
   solve: (x, y, selected_type) ->
     if x < 0 or x > settings.mapSize - 1 or y < 0 or y > settings.mapSize - 1
@@ -89,7 +90,7 @@ window.IngredientMap = class
 
     result = null
 
-    result = @explode_map if @.hasMatches(selected_position_x, selected_position_y)
+    result = @explode_map if @.hasMatches(selected_position_x, selected_position_y) > 2
 
     result
 
@@ -149,7 +150,7 @@ window.IngredientMap = class
       for y in [0 .. settings.mapSize - 1]
         if busy_map[x][y] == false
           currentCombination = null
-          currentCombination = @explode_map if @.hasMatches(x,y)
+          currentCombination = @explode_map if @.hasMatches(x,y) > 2
           if currentCombination
             # Save in busy_map
             for i in [0 .. settings.mapSize - 1]

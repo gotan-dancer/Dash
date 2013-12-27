@@ -66,13 +66,94 @@ window.LevelController = class extends BaseController
     if @last_explosion != null
       @waiting = @last_explosion - @timer.currentValue()
 
-    #combinationCount = @ingredients.isCombinations()
-
     if @waiting % 6 == 1
       combinationCount = @ingredients.isCombinations() 
-      if combinationCount == 0
+      if combinationCount < 3 # !
         # Create good combination
         alert "Create good combination"
+
+        # -->
+        candidateMap = []
+        #isCombinationsCount = 0
+
+        for x in [0 .. settings.mapSize - 1]
+          candidateMap[x] = []
+          for y in [0 .. settings.mapSize - 1]
+            candidateMap[x][y] = false
+
+        for x in [0 .. settings.mapSize - 1]
+          for y in [0 .. settings.mapSize - 1]
+            if candidateMap[x][y] == false
+              candidateCombination = null
+
+              candidateCombination = @ingredients.explode_map if @ingredients.hasMatches(x,y) == 2
+
+              if candidateCombination
+                for i in [0 .. settings.mapSize - 1]
+                  for j in [0 .. settings.mapSize - 1]
+                    if candidateCombination[i][j]
+                      candidateMap[i][j] = candidateCombination[i][j]
+                      # Ввести счетчик?
+        
+        # return candidateMap
+
+        addCeilMap = []
+
+        for x in [0 .. settings.mapSize - 1]
+          addCeilMap[x] = []
+          for y in [0 .. settings.mapSize - 1]
+            addCeilMap[x][y] = ''
+
+        for x in [0 .. settings.mapSize - 1]
+          for y in [0 .. settings.mapSize - 1]
+            if candidateMap[x][y] == true
+              addCeilMap[x][y-1] = @ingredients.get(x,y).type if y-1 > -1 and candidateMap[x][y-1] != true
+              addCeilMap[x][y+1] = @ingredients.get(x,y).type if y+1 < settings.mapSize and candidateMap[x][y+1] != true
+              addCeilMap[x-1][y] = @ingredients.get(x,y).type if x-1 > -1 and candidateMap[x-1][y] != true
+              addCeilMap[x+1][y] = @ingredients.get(x,y).type if x+1 < settings.mapSize and candidateMap[x+1][y] != true
+        
+        # return addCeilMap 
+
+        randomSize = 0
+        addCeilCandidate = []
+
+        for x in [0 .. settings.mapSize - 1]
+          for y in [0 .. settings.mapSize - 1]
+            if addCeilMap[x][y] != ''
+              addCeilCandidate[randomSize] = 9 * x + y
+              randomSize += 1
+
+
+        addCeilIndex = []
+        for x in [0 .. 2]
+          addCeilIndex[x] = -1
+          addCeilIndex[x] = _.random(randomSize - 1)
+
+        #addCeilIndex = addCeilIndex.sort()
+
+        del_x = []
+        del_y = []
+        for k in [0 .. 2]
+          del_x[k] = -1
+          del_y[k] = -1
+          
+          del_x[k] = addCeilCandidate[addCeilIndex[k]] / 9
+          del_y[k] = addCeilCandidate[addCeilIndex[k]] % 9
+
+          alert del_x[k] + ' ' + del_y[k] + ' ' + addCeilMap[del_x[k]][del_y[k]]
+
+        # for x in [0 .. settings.mapSize - 1]
+        #   for y in [0 .. settings.mapSize - 1]
+        #     index = 0
+        #     if addCeilMap[x][y] != ''
+        #       index += 1
+        #       for k in [0 .. 2]
+        #         if index == addCeilIndex[k]
+        #           #@ingredients.get(x,y).type = addCeilMap[x][y]
+        #           alert x + ' ' + y + ' ' + addCeilMap[x][y]
+
+        # animate() 
+        # <--
 
     if @waiting % 6 == 5
       combinationCount = @ingredients.isCombinations() 
@@ -119,7 +200,7 @@ window.LevelController = class extends BaseController
 
     return unless @selected_ingredient
 
-    if @ingredients.isMatch(@selected_position_x,@selected_position_y) 
+    if @ingredients.isMatch(@selected_position_x,@selected_position_y) > 2
       @.swapIngredients(@selected_ingredient) 
 
     @selected_ingredient.toggleSelection()
