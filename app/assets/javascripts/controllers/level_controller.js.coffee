@@ -142,7 +142,8 @@ window.LevelController = class extends BaseController
 
           alert del_x[k] + ' ' + del_y[k] + ' ' + addCeilMap[del_x[k]][del_y[k]]
 
-        # animate() 
+          @ingredients.get(del_x[k],del_y[k]).type = addCeilMap[del_x[k]][del_y[k]]
+          @animator.animateIngredientSwap(@ingredients.get(del_x[k],del_y[k])) 
         # <--
 
     if @waiting % 6 == 5
