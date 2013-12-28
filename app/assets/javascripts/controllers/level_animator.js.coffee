@@ -264,9 +264,6 @@ window.LevelAnimator = class extends Animator
         if ingredients[x][y] == true
           @ingredients[x][y].exploding = true       
 
-    # for ingredient in ingredients
-    #   @ingredients[ingredient.x][ingredient.y].exploding = true
-
   isExplosionAnimationFinished: ->
     Date.now() - @explosion_animation_started > @.explosionAnimationSpeed
 

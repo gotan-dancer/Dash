@@ -18,11 +18,6 @@ window.IngredientMap = class
 
     @animator = new LevelAnimator(@)
 
-  #  @selected_type = -1
-
-  # isTypeEqual: (x, y) ->
-  #   @explode_map[x][y] = true
-
   clearMap: ->
     for x in [0 .. settings.mapSize - 1]
       for y in [0 .. settings.mapSize - 1]
@@ -47,7 +42,6 @@ window.IngredientMap = class
     matches1
 
   hasMatches: (selected_position_x, selected_position_y) ->
-#    selected_type = @.get(selected_position_x, selected_position_y)
     selected_type = @ingredients[selected_position_x][selected_position_y].type
 
     for x in [0 .. settings.mapSize - 1]
@@ -64,10 +58,6 @@ window.IngredientMap = class
           solve_count = solve_count + 1
 
     solve_count
-    # if solve_count > 2
-    #   return true
-    # else
-    #   return false
 
   solve: (x, y, selected_type) ->
     if x < 0 or x > settings.mapSize - 1 or y < 0 or y > settings.mapSize - 1
@@ -96,8 +86,6 @@ window.IngredientMap = class
 
   checkAffectedIngredients: (exploded)->
 
-    #displacements = []
-
     for y in [settings.mapSize - 1 .. 1]
       for x in [0 .. settings.mapSize - 1]
         if exploded[x][y]
@@ -105,25 +93,12 @@ window.IngredientMap = class
             @ingredients[x][z].type = @ingredients[x][z-1].type
             @explode_map[x][z] = @explode_map[x][z-1]
             @animator.animateAffected([@ingredients[x][z],1])
-    #        displacements.push([@ingredients[x][z],1])
 
     for x in [0 .. settings.mapSize - 1]
       if exploded[x][0]
         @ingredients[x][0].type = Ingredient.randomType()
         @explode_map[x][0] = false
         @animator.animateAffected([@ingredients[x][0],1])
-    #    displacements.push([@ingredients[x][0],1])
-
-    #displacements
-
-  # updateWithDisplacedType: (ingredient, displace)->
-  #   ingredient_above = @ingredients[ingredient.x][ingredient.y - displace]
-
-  #   if ingredient_above
-  #     ingredient.type = ingredient_above.type
-  #   else
-  #     ingredient.type = Ingredient.randomType()
-  #     ingredient.type = Ingredient.randomType() while @.hasMatches(ingredient)
 
   calculateExplodingScore: ->
     result = 0
@@ -132,8 +107,6 @@ window.IngredientMap = class
       for y in [0 .. settings.mapSize - 1]
         if @explode_map[x][y]
           result += 1
-
-    #@.isCombinations()
 
     result
 
@@ -161,4 +134,4 @@ window.IngredientMap = class
             isCombinationsCount += 1
 
     isCombinationsCount
-    #alert "Combinations count = " + isCombinationsCount
+
