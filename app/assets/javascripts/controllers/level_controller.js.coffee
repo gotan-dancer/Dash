@@ -27,6 +27,8 @@ window.LevelController = class extends BaseController
     @last_explosion = null
     @waiting = 0
 
+    @bombingCount = 1
+
   show: ->
     @.setupEventListeners()
 
@@ -228,6 +230,21 @@ window.LevelController = class extends BaseController
     @animator.animateExplosion(@exploding)
 
     @score += @ingredients.calculateExplodingScore() # Later
+# ->
+    if Math.floor(@score / 25) == @bombingCount # Correct!
+      @bombingCount += 1
+
+      bomb_x = _.random(settings.mapSize - 1)
+      bomb_y = _.random(settings.mapSize - 1)
+
+      for x in [0 .. settings.mapSize - 1]
+        for y in [0 .. settings.mapSize - 1]
+          @exploding[x][y] = false
+          if bomb_x == x or bomb_y == y
+            @exploding[x][y] = true
+
+      @animator.animateExplosion(@exploding)
+# <-
 
   checkAffected: ->
     
