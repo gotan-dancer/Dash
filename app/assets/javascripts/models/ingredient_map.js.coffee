@@ -42,6 +42,7 @@ window.IngredientMap = class
     matches1
 
   hasMatches: (selected_position_x, selected_position_y) ->
+    # Return matches' count
     selected_type = @ingredients[selected_position_x][selected_position_y].type
 
     for x in [0 .. settings.mapSize - 1]
@@ -60,6 +61,7 @@ window.IngredientMap = class
     solve_count
 
   solve: (x, y, selected_type) ->
+    # Find exploding fields using recursion
     if x < 0 or x > settings.mapSize - 1 or y < 0 or y > settings.mapSize - 1
       return
 
@@ -85,7 +87,7 @@ window.IngredientMap = class
     result
 
   checkAffectedIngredients: (exploded)->
-
+    # Moving blocks down
     for y in [settings.mapSize - 1 .. 1]
       for x in [0 .. settings.mapSize - 1]
         if exploded[x][y]
@@ -111,6 +113,7 @@ window.IngredientMap = class
     result
 
   isCombinations: ->
+    # Check combinations existing
     busy_map = []
     isCombinationsCount = 0
 

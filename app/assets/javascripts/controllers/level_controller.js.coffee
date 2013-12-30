@@ -270,6 +270,7 @@ window.LevelController = class extends BaseController
 
     @score += @ingredients.calculateExplodingScore()
 
+    # Bomb exploding after score multiplied 25
     if Math.floor(@score / 25) == @bombingCount
       @bombingCount += 1
 
