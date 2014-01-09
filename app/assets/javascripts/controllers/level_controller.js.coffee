@@ -72,7 +72,7 @@ window.LevelController = class extends BaseController
       combinationCount = @ingredients.isCombinations() 
       if combinationCount < 3 
         # Create good combination
-        alert "Create good combination"
+        #alert "Create good combination"
 
         candidateMap = []
 
@@ -133,7 +133,7 @@ window.LevelController = class extends BaseController
           del_x[k] = Math.floor(addCeilCandidate[addCeilIndex[k]] / 9)
           del_y[k] = addCeilCandidate[addCeilIndex[k]] % 9
 
-          alert del_x[k] + ' ' + del_y[k] + ' ' + addCeilMap[del_x[k]][del_y[k]]
+          #alert del_x[k] + ' ' + del_y[k] + ' ' + addCeilMap[del_x[k]][del_y[k]]
 
           @ingredients.get(del_x[k],del_y[k]).type = addCeilMap[del_x[k]][del_y[k]]
           @animator.animateIngredientSwap(@ingredients.get(del_x[k],del_y[k])) 
@@ -142,7 +142,7 @@ window.LevelController = class extends BaseController
       combinationCount = @ingredients.isCombinations() 
       if combinationCount != 0
         # Wait 5 seconds for max combination's lighting
-        alert combinationCount
+        #alert combinationCount
 
         busy_map = []
 
@@ -182,7 +182,7 @@ window.LevelController = class extends BaseController
                     if currentCombination[i][j]
                       busy_map[i][j] = currentCombination[i][j]
 
-        alert "Max_count = " + max + " max_x = " + max_x + " max_y = " + max_y
+        #alert "Max_count = " + max + " max_x = " + max_x + " max_y = " + max_y
 
         message = ""
 
@@ -193,7 +193,7 @@ window.LevelController = class extends BaseController
               message += " x" + i + "=" + x + " y" + i + "=" + y
               i += 1
 
-        alert message
+        #alert message
 
   onMouseDown: (e)=>
     e.preventDefault()
@@ -314,6 +314,32 @@ window.LevelController = class extends BaseController
 
     @ingredients.clearMap()
 
+  checkAffectedIngredients: ->
+    # Moving blocks down
+    for y in [settings.mapSize - 1 .. 1]
+      for x in [0 .. settings.mapSize - 1]
+        affected = []
+        if @exploding[x][y] #
+          for z in [y .. 1]
+            @ingredients.get(x,z).type = @ingredients.get(x,z-1).type
+            @exploding[x][z] = @exploding[x][z-1]
+
+            # if z-1 == 0
+            #   @exploding[x][z-1] = false
+
+            affected.push([@ingredients.get(x,z),1])
+
+            @animator.animateAffected(affected)
+
+    for x in [0 .. settings.mapSize - 1]
+      affected = []
+      if @exploding[x][0]
+        @ingredients.get(x,0).type = Ingredient.randomType()
+        @exploding[x][0] = false
+        affected.push([@ingredients.get(x,0),1])
+        @animator.animateAffected(affected)
+
+
   updatePotion: ->
     return unless @potion.isComplete()
 
@@ -330,7 +356,7 @@ window.LevelController = class extends BaseController
     @.checkMatches()
 
   onExplosionAnimationFinished: ->
-    @.checkAffected()
+    @.checkAffected() #
     @.updatePotion()
 
   onAffectedAnimationFinished: ->

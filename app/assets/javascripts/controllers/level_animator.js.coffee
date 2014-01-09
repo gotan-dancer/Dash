@@ -99,6 +99,8 @@ window.LevelAnimator = class extends Animator
 
     @.createPotionSprites()
 
+    @.createBonusSlider(0) #
+
     @sprites_added = true
 
   animate: =>
@@ -144,6 +146,9 @@ window.LevelAnimator = class extends Animator
 
     @score.setText(@controller.score)
 
+    @.createBonusSlider(@controller.score) #
+    #@bonus.setText("Hi " + @controller.timer.currentValue()) #
+
   createIngredientSprite: (ingredient)->
     sprite = new PIXI.MovieClip(@.loops["ingredient_#{ ingredient.type }"].textures)
     sprite.position.x = @.gridToScene(ingredient.x)
@@ -176,6 +181,21 @@ window.LevelAnimator = class extends Animator
       @interface_layer.removeChild(sprite)
 
     @potion_components = []
+
+# -->
+  createBonusSlider: (score)->
+    @bonus = new PIXI.Graphics()
+
+    @bonus.beginFill(0xFFF,1)
+    @bonus.drawRect(560,300,score*8,50)
+    @bonus.endFill()    
+
+    @bonus.beginFill(0,1)
+    @bonus.drawRect(560+score*8,300,200-score*8,50)
+    @bonus.endFill()    
+
+    @interface_layer.addChild(@bonus)
+# <--
 
   isMouseWithinIngredients: (position)->
     @.gridToScene(-1) < position.x < @.gridToScene(settings.mapSize) and

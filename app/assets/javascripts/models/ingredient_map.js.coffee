@@ -86,21 +86,22 @@ window.IngredientMap = class
 
     result
 
-  checkAffectedIngredients: (exploded)->
-    # Moving blocks down
-    for y in [settings.mapSize - 1 .. 1]
-      for x in [0 .. settings.mapSize - 1]
-        if exploded[x][y]
-          for z in [y .. 1]
-            @ingredients[x][z].type = @ingredients[x][z-1].type
-            @explode_map[x][z] = @explode_map[x][z-1]
-            @animator.animateAffected([@ingredients[x][z],1])
+  # checkAffectedIngredients: ->
+  #   # Moving blocks down
+  #   for y in [settings.mapSize - 1 .. 1]
+  #     for x in [0 .. settings.mapSize - 1]
+  #       affected = []
+  #       if @explode_map[x][y] #
+  #         for z in [y .. 1]
+  #           @ingredients[x][z].type = @ingredients[x][z-1].type
+  #           @explode_map[x][z] = @explode_map[x][z-1]
+  #           @animator.animateAffected([@ingredients.get(x,z),1])
 
-    for x in [0 .. settings.mapSize - 1]
-      if exploded[x][0]
-        @ingredients[x][0].type = Ingredient.randomType()
-        @explode_map[x][0] = false
-        @animator.animateAffected([@ingredients[x][0],1])
+  #   for x in [0 .. settings.mapSize - 1]
+  #     if @explode_map[x][0]
+  #       @ingredients[x][0].type = Ingredient.randomType()
+  #       @explode_map[x][0] = false
+  #       @animator.animateAffected([@ingredients.get(x,0),1])
 
   calculateExplodingScore: ->
     result = 0
