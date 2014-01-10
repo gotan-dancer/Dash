@@ -8,6 +8,7 @@ window.LevelAnimator = class extends Animator
   explosionAnimationSpeed: 200
   affectedAnimationSpeed: 300
   collectedAnimationSpeed: 500
+  bombAnimationSpeed: 1000
 
   timerStyle:
     normal:
@@ -125,6 +126,9 @@ window.LevelAnimator = class extends Animator
       if @collected_animation_started and @.isCollectedAnimationFinished()
         @collected_animation_started = null
 
+      if @bomb_animation_started and @.isBombAnimationFinished() #
+        @bomb_animation_started = null #
+
       @.updateSpriteStates()
 
     super
@@ -147,7 +151,11 @@ window.LevelAnimator = class extends Animator
     @score.setText(@controller.score)
 
     @.createBonusSlider(@controller.score) #
-    #@bonus.setText("Hi " + @controller.timer.currentValue()) #
+
+    # if @bomb_animation_started
+    #   @.animateBomb()
+    
+    # @bonus.setText("Hi " + @controller.timer.currentValue()) #
 
   createIngredientSprite: (ingredient)->
     sprite = new PIXI.MovieClip(@.loops["ingredient_#{ ingredient.type }"].textures)
@@ -181,21 +189,6 @@ window.LevelAnimator = class extends Animator
       @interface_layer.removeChild(sprite)
 
     @potion_components = []
-
-# -->
-  createBonusSlider: (score)->
-    @bonus = new PIXI.Graphics()
-
-    @bonus.beginFill(0xFFF,1)
-    @bonus.drawRect(560,300,score*8,50)
-    @bonus.endFill()    
-
-    @bonus.beginFill(0,1)
-    @bonus.drawRect(560+score*8,300,200-score*8,50)
-    @bonus.endFill()    
-
-    @interface_layer.addChild(@bonus)
-# <--
 
   isMouseWithinIngredients: (position)->
     @.gridToScene(-1) < position.x < @.gridToScene(settings.mapSize) and
@@ -254,6 +247,9 @@ window.LevelAnimator = class extends Animator
 
         sprite.position.y = @.gridToScene(sprite.source.y - (1 - progress) * sprite.affected_displacement)
 
+    # if sprite.bombing
+    #   if 
+    
     sprite.gotoAndStop(
       if sprite.source.selected then 1 else 0
     )
@@ -331,3 +327,51 @@ window.LevelAnimator = class extends Animator
 
   isBlockingAnimationInProgress: ->
     @swap_animation_started or @explosion_animation_started or @affected_animation_started
+
+  createBonusSlider: (score)->
+    @bonus = new PIXI.Graphics()
+
+    @bonus.beginFill(0xFFF,1)
+    @bonus.drawRect(560,300,Math.floor(score % 25)*8,50)
+    @bonus.endFill()    
+
+    @bonus.beginFill(0,1)
+    @bonus.drawRect(560+Math.floor(score % 25)*8,300,200-Math.floor(score % 25)*8,50)
+    @bonus.endFill()    
+
+    @interface_layer.addChild(@bonus)
+
+  isBombAnimationFinished: ->
+    Date.now() - @bomb_animation_started > @.bombAnimationSpeed
+
+# -->
+  animateBomb: (bomb_x, bomb_y) ->
+    @bomb_animation_started = Date.now()
+
+    # for column, x in @controller.ingredients.ingredients
+    #   for ingredient, y in column
+    #     if bomb_x == x and bomb_y == y
+    #@sprite = @.createBomb(bomb_x,bomb_y)
+    @sprite = new PIXI.Sprite.fromImage(preloader.paths.bomb)
+    @sprite.position.x = @.gridToScene(bomb_x)
+    @sprite.position.y = @.gridToScene(bomb_y)
+    @sprite.anchor.x = 0.5
+    @sprite.anchor.y = 0.5
+
+    @interface_layer.addChild(@sprite)
+
+    # @ingredients[x] ?= []
+    # @ingredients[x][y] = sprite
+
+
+  createBomb: (bomb_x, bomb_y) ->
+    @sprite = new PIXI.Sprite.fromImage(preloader.paths.bomb)
+    @sprite.position.x = @.gridToScene(bomb_x)
+    @sprite.position.y = @.gridToScene(bomb_y)
+    @sprite.anchor.x = 0.5
+    @sprite.anchor.y = 0.5
+    #sprite.source = ingredient
+    @sprite
+
+# <--
+

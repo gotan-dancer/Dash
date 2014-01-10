@@ -5,6 +5,7 @@ window.Preloader = class
     # logo: '$assetPath(logo.jpg)'
     art: '$assetPath(art.png)'
     background: '$assetPath(background.jpg)'
+    bomb: '$assetPath(bomb.png)'
     dialog: '$assetPath(dialog.png)'
     button: '$assetPath(button.png)'
     tutorial: '$assetPath(tutorial.png)'

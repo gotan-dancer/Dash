@@ -277,13 +277,16 @@ window.LevelController = class extends BaseController
       bomb_x = _.random(settings.mapSize - 1)
       bomb_y = _.random(settings.mapSize - 1)
 
-      for x in [0 .. settings.mapSize - 1]
-        for y in [0 .. settings.mapSize - 1]
-          @exploding[x][y] = false
-          if bomb_x == x or bomb_y == y
-            @exploding[x][y] = true
+      @animator.animateBomb(bomb_x, bomb_y) #
 
-      @animator.animateExplosion(@exploding)
+      # Explosion
+      # for x in [0 .. settings.mapSize - 1]
+      #   for y in [0 .. settings.mapSize - 1]
+      #     @exploding[x][y] = false
+      #     if bomb_x == x or bomb_y == y
+      #       @exploding[x][y] = true
+
+      # @animator.animateExplosion(@exploding)
 
   checkAffected: ->
     
