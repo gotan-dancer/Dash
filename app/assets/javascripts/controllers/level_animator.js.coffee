@@ -8,7 +8,7 @@ window.LevelAnimator = class extends Animator
   explosionAnimationSpeed: 200
   affectedAnimationSpeed: 300
   collectedAnimationSpeed: 500
-  bombAnimationSpeed: 1000
+#  bombAnimationSpeed: 1000
 
   timerStyle:
     normal:
@@ -28,6 +28,7 @@ window.LevelAnimator = class extends Animator
 
   loops: # [StartFrame, EndFrame, Speed]
    ingredient_blue:   {frames: [0,  1], speed: 0.3}
+   #ingredient_bomb:   {frames: [0,  1], speed: 0.3} #
    ingredient_green:  {frames: [0,  1], speed: 0.3}
    ingredient_purple: {frames: [0,  1], speed: 0.3}
    ingredient_orange: {frames: [0,  1], speed: 0.3}
@@ -126,8 +127,8 @@ window.LevelAnimator = class extends Animator
       if @collected_animation_started and @.isCollectedAnimationFinished()
         @collected_animation_started = null
 
-      if @bomb_animation_started and @.isBombAnimationFinished() #
-        @bomb_animation_started = null #
+      # if @bomb_animation_started and @.isBombAnimationFinished() #
+      #   @bomb_animation_started = null #
 
       @.updateSpriteStates()
 
@@ -328,6 +329,8 @@ window.LevelAnimator = class extends Animator
   isBlockingAnimationInProgress: ->
     @swap_animation_started or @explosion_animation_started or @affected_animation_started
 
+# -->
+
   createBonusSlider: (score)->
     @bonus = new PIXI.Graphics()
 
@@ -341,37 +344,19 @@ window.LevelAnimator = class extends Animator
 
     @interface_layer.addChild(@bonus)
 
-  isBombAnimationFinished: ->
-    Date.now() - @bomb_animation_started > @.bombAnimationSpeed
+  # isBombAnimationFinished: ->
+  #   Date.now() - @bomb_animation_started > @.bombAnimationSpeed
 
-# -->
   animateBomb: (bomb_x, bomb_y) ->
     @bomb_animation_started = Date.now()
 
-    # for column, x in @controller.ingredients.ingredients
-    #   for ingredient, y in column
-    #     if bomb_x == x and bomb_y == y
-    #@sprite = @.createBomb(bomb_x,bomb_y)
-    @sprite = new PIXI.Sprite.fromImage(preloader.paths.bomb)
-    @sprite.position.x = @.gridToScene(bomb_x)
-    @sprite.position.y = @.gridToScene(bomb_y)
-    @sprite.anchor.x = 0.5
-    @sprite.anchor.y = 0.5
+    sprite = new PIXI.Sprite.fromImage(preloader.paths.bomb)
+    sprite.position.x = @.gridToScene(bomb_x)
+    sprite.position.y = @.gridToScene(bomb_y)
+    sprite.anchor.x = 0.5
+    sprite.anchor.y = 0.5
 
-    @interface_layer.addChild(@sprite)
-
-    # @ingredients[x] ?= []
-    # @ingredients[x][y] = sprite
-
-
-  createBomb: (bomb_x, bomb_y) ->
-    @sprite = new PIXI.Sprite.fromImage(preloader.paths.bomb)
-    @sprite.position.x = @.gridToScene(bomb_x)
-    @sprite.position.y = @.gridToScene(bomb_y)
-    @sprite.anchor.x = 0.5
-    @sprite.anchor.y = 0.5
-    #sprite.source = ingredient
-    @sprite
+    @interface_layer.addChild(sprite)
 
 # <--
 

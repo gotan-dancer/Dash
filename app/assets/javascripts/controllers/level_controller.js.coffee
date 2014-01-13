@@ -279,6 +279,10 @@ window.LevelController = class extends BaseController
 
       @animator.animateBomb(bomb_x, bomb_y) #
 
+      @ingredients.get(bomb_x,bomb_y).type = 'bomb' #
+
+      #alert bomb_x + " " + bomb_y + " " + @ingredients.get(bomb_x,bomb_y).type #
+
       # Explosion
       # for x in [0 .. settings.mapSize - 1]
       #   for y in [0 .. settings.mapSize - 1]
