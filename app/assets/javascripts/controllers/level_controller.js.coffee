@@ -235,8 +235,24 @@ window.LevelController = class extends BaseController
 
     return unless @selected_ingredient
 
-    # if isBomb(@selected_position_x,@selected_position_y)
-    #   @.explodeBomb()
+    if @ingredients.get(@selected_position_x,@selected_position_y).type == 'bomb'
+      # Explosion
+      @exploding = []
+
+      for x in [0 .. settings.mapSize - 1]
+        @exploding[x] = []
+
+        for y in [0 .. settings.mapSize - 1]
+          @exploding[x][y] = false
+
+      for x in [0 .. settings.mapSize - 1]
+        for y in [0 .. settings.mapSize - 1]
+          if @selected_position_x == x or @selected_position_y == y
+            @exploding[x][y] = true
+
+      @animator.animateExplosion(@exploding)
+
+      return
 
     if @ingredients.isMatch(@selected_position_x,@selected_position_y) > 2
       @.swapIngredients(@selected_ingredient) 
@@ -285,16 +301,6 @@ window.LevelController = class extends BaseController
       @ingredients.get(bomb_x,bomb_y).type = 'bomb' #
 
       #alert bomb_x + " " + bomb_y + " " + @ingredients.get(bomb_x,bomb_y).type #
-
-
-      # Explosion
-      # for x in [0 .. settings.mapSize - 1]
-      #   for y in [0 .. settings.mapSize - 1]
-      #     @exploding[x][y] = false
-      #     if bomb_x == x or bomb_y == y
-      #       @exploding[x][y] = true
-
-      # @animator.animateExplosion(@exploding)
 
   checkAffected: ->
     
