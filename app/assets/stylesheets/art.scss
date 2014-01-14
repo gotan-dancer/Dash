@@ -29,6 +29,32 @@
   }
 }
 
+@function sprite_position_ingredient_bomb_0000(){
+  @return -678px -2px;
+}
+@mixin sprite_ingredient_bomb_0000($width: 50px, $height: 50px) {
+  width: $width;
+  height: $height;
+  background: {
+    repeat: no-repeat;
+    image: sprite_image_url();
+    position: sprite_position_ingredient_bomb_0000();
+  }
+}
+
+@function sprite_position_ingredient_bomb_0001(){
+  @return -626px -2px;
+}
+@mixin sprite_ingredient_bomb_0001($width: 50px, $height: 50px) {
+  width: $width;
+  height: $height;
+  background: {
+    repeat: no-repeat;
+    image: sprite_image_url();
+    position: sprite_position_ingredient_bomb_0001();
+  }
+}
+
 @function sprite_position_ingredient_blue_0000(){
   @return -574px -2px;
 }

@@ -28,7 +28,7 @@ window.LevelAnimator = class extends Animator
 
   loops: # [StartFrame, EndFrame, Speed]
    ingredient_blue:   {frames: [0,  1], speed: 0.3}
-   #ingredient_bomb:   {frames: [0,  1], speed: 0.3} #
+   ingredient_bomb:   {frames: [0,  1], speed: 0.3}
    ingredient_green:  {frames: [0,  1], speed: 0.3}
    ingredient_purple: {frames: [0,  1], speed: 0.3}
    ingredient_orange: {frames: [0,  1], speed: 0.3}
@@ -350,13 +350,18 @@ window.LevelAnimator = class extends Animator
   animateBomb: (bomb_x, bomb_y) ->
     @bomb_animation_started = Date.now()
 
-    sprite = new PIXI.Sprite.fromImage(preloader.paths.bomb)
+    sprite = new PIXI.MovieClip(@.loops["ingredient_bomb"].textures)
+    #sprite = PIXI.Sprite.fromImage(preloader.paths.bomb)
     sprite.position.x = @.gridToScene(bomb_x)
     sprite.position.y = @.gridToScene(bomb_y)
     sprite.anchor.x = 0.5
     sprite.anchor.y = 0.5
+    sprite.source = @controller.ingredients.get(bomb_x,bomb_y) #
 
-    @interface_layer.addChild(sprite)
+    @ingredient_layer.addChild(sprite) #
+
+    @ingredients[bomb_x] ?= []
+    @ingredients[bomb_x][bomb_y] = sprite
 
 # <--
 
