@@ -2,10 +2,11 @@
 
 window.Preloader = class
   @paths:
-    # logo: '$assetPath(logo.jpg)'
+    #logo: '$assetPath(logo.jpg)'
     art: '$assetPath(art.png)'
     background: '$assetPath(background.jpg)'
-    bomb: '$assetPath(bomb.png)'
+    #bomb: '$assetPath(bomb.png)'
+    star: '$assetPath(star.png)'
     dialog: '$assetPath(dialog.png)'
     button: '$assetPath(button.png)'
     tutorial: '$assetPath(tutorial.png)'

@@ -182,16 +182,17 @@ window.LevelController = class extends BaseController
                     if currentCombination[i][j]
                       busy_map[i][j] = currentCombination[i][j]
 
+        @animator.animateMaxCombination(maxCombination)
         #alert "Max_count = " + max + " max_x = " + max_x + " max_y = " + max_y
 
-        message = ""
+        # message = ""
 
-        i = 1
-        for x in [0 .. settings.mapSize - 1]
-          for y in [0 .. settings.mapSize - 1]
-            if maxCombination[x][y]
-              message += " x" + i + "=" + x + " y" + i + "=" + y
-              i += 1
+        # i = 1
+        # for x in [0 .. settings.mapSize - 1]
+        #   for y in [0 .. settings.mapSize - 1]
+        #     if maxCombination[x][y]
+        #       message += " x" + i + "=" + x + " y" + i + "=" + y
+        #       i += 1
 
         #alert message
 

@@ -9,6 +9,7 @@ window.LevelAnimator = class extends Animator
   affectedAnimationSpeed: 300
   collectedAnimationSpeed: 500
 #  bombAnimationSpeed: 1000
+  combinationAnimationSpeed: 1000
 
   timerStyle:
     normal:
@@ -363,5 +364,36 @@ window.LevelAnimator = class extends Animator
     @ingredients[bomb_x] ?= []
     @ingredients[bomb_x][bomb_y] = sprite
 
-# <--
+  animateMaxCombination: (maxCombination) ->
+    @combination_animation_started = Date.now()
 
+    # setTimeout(spriteSize(),)
+
+    for step in [0 .. 1] by 0.1
+      for x in [0 .. settings.mapSize - 1]
+        for y in [0 .. settings.mapSize - 1]
+          if maxCombination[x][y]
+            sprite = PIXI.Sprite.fromImage(preloader.paths.star) 
+      
+            sprite.width = 50 * step
+            sprite.height = 50 * step
+
+            sprite.position.x = @.gridToScene(x)
+            sprite.position.y = @.gridToScene(y)
+            sprite.anchor.x = 0.5 #
+            sprite.anchor.y = 0.5 #
+
+            @interface_layer.addChild(sprite)
+
+            #break if @.isCombinationAnimationFinished()
+
+    # Star's size is increasing
+    # # Star's alpha is decreasing
+    # @.drawDecreasingAlpha()
+    # # It's able after max combination's lighting
+    # @.endLight()
+
+  isCombinationAnimationFinished: ->
+    Date.now() - @combination_animation_started > @.combinationAnimationSpeed
+
+# <--
