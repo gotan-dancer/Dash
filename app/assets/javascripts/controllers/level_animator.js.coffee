@@ -128,8 +128,8 @@ window.LevelAnimator = class extends Animator
       if @collected_animation_started and @.isCollectedAnimationFinished()
         @collected_animation_started = null
 
-      # if @bomb_animation_started and @.isBombAnimationFinished() #
-      #   @bomb_animation_started = null #
+      if @combination_animation_started and @.isCombinationAnimationFinished() #
+        @combination_animation_started = null #
 
       @.updateSpriteStates()
 
@@ -154,6 +154,8 @@ window.LevelAnimator = class extends Animator
 
     @.createBonusSlider(@controller.score) #
 
+    for sprite in @interface_layer.children #
+      @.updateInterfaceSprite(sprite) #
     # if @bomb_animation_started
     #   @.animateBomb()
     
@@ -367,27 +369,22 @@ window.LevelAnimator = class extends Animator
   animateMaxCombination: (maxCombination) ->
     @combination_animation_started = Date.now()
 
-    # setTimeout(spriteSize(),)
+    for x in [0 .. settings.mapSize - 1]
+      for y in [0 .. settings.mapSize - 1]
+        if maxCombination[x][y]
 
-    for step in [0 .. 1] by 0.1
-      for x in [0 .. settings.mapSize - 1]
-        for y in [0 .. settings.mapSize - 1]
-          if maxCombination[x][y]
-            sprite = PIXI.Sprite.fromImage(preloader.paths.star) 
-      
-            sprite.width = 50 * step
-            sprite.height = 50 * step
+          sprite = PIXI.Sprite.fromImage(preloader.paths.star) 
 
-            sprite.position.x = @.gridToScene(x)
-            sprite.position.y = @.gridToScene(y)
-            sprite.anchor.x = 0.5 #
-            sprite.anchor.y = 0.5 #
+          sprite.position.x = @.gridToScene(x)
+          sprite.position.y = @.gridToScene(y)
+          sprite.anchor.x = 0.5 
+          sprite.anchor.y = 0.5
 
-            @interface_layer.addChild(sprite)
+          sprite.maxComb = true
 
-            #break if @.isCombinationAnimationFinished()
+          @interface_layer.addChild(sprite)
 
-    # Star's size is increasing
+    # # Star's size is increasing
     # # Star's alpha is decreasing
     # @.drawDecreasingAlpha()
     # # It's able after max combination's lighting
@@ -395,5 +392,18 @@ window.LevelAnimator = class extends Animator
 
   isCombinationAnimationFinished: ->
     Date.now() - @combination_animation_started > @.combinationAnimationSpeed
+
+  updateInterfaceSprite: (sprite)->
+    if sprite.maxComb
+      if not @combination_animation_started or @.isCombinationAnimationFinished()
+        sprite.scale.x = 0
+        sprite.scale.y = 0
+
+        delete sprite.maxComb
+      else
+        progress = (Date.now() - @combination_animation_started) / @.combinationAnimationSpeed
+
+        sprite.scale.x = progress * 50 / 256
+        sprite.scale.y = progress * 50 / 256
 
 # <--
