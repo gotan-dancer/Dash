@@ -8,8 +8,7 @@ window.LevelAnimator = class extends Animator
   explosionAnimationSpeed: 200
   affectedAnimationSpeed: 300
   collectedAnimationSpeed: 500
-  combinationAnimationSizeSpeed: 1000
-  combinationAnimationAlphaSpeed: 1000
+  combinationAnimationSpeed: 1000
 
   timerStyle:
     normal:
@@ -42,10 +41,12 @@ window.LevelAnimator = class extends Animator
     @background_layer = new PIXI.DisplayObjectContainer()
     @ingredient_layer = new PIXI.DisplayObjectContainer()
     @interface_layer  = new PIXI.DisplayObjectContainer()
+    @max_comb_layer   = new PIXI.DisplayObjectContainer()
 
     @stage.addChild(@background_layer)
     @stage.addChild(@ingredient_layer)
     @stage.addChild(@interface_layer)
+    @stage.addChild(@max_comb_layer)
 
     @ingredients = []
     @potion_components = []
@@ -129,11 +130,13 @@ window.LevelAnimator = class extends Animator
       if @collected_animation_started and @.isCollectedAnimationFinished()
         @collected_animation_started = null
 
-      if @combination_animation_size_started and @.isCombinationAnimationSizeFinished() #
-        @combination_animation_size_started = null #
+      if @combination_animation_started and @.isCombinationAnimationFinished() #
+        @combination_animation_started = null #
 
-      if @combination_animation_alpha_started and @.isCombinationAnimationAlphaFinished() #
-        @combination_animation_alpha_started = null #
+        # @controller.on
+
+      # if @combination_animation_alpha_started and @.isCombinationAnimationAlphaFinished() #
+      #   @combination_animation_alpha_started = null #
 
       @.updateSpriteStates()
 
@@ -158,11 +161,11 @@ window.LevelAnimator = class extends Animator
 
     @.createBonusSlider(@controller.score) #
 
-    for sprite in @interface_layer.children #
-      @.updateInterfaceSpriteSize(sprite) #
+    for star in @max_comb_layer.children #
+      @.updateInterfaceSprite(star) #
 
-    for sprite in @interface_layer.children #
-      @.updateInterfaceSpriteAlpha(sprite) #
+    # for sprite in @interface_layer.children #
+    #   @.updateInterfaceSpriteAlpha(sprite) #
 
   createIngredientSprite: (ingredient)->
     sprite = new PIXI.MovieClip(@.loops["ingredient_#{ ingredient.type }"].textures)
@@ -363,40 +366,11 @@ window.LevelAnimator = class extends Animator
     @ingredients[bomb_x] ?= []
     @ingredients[bomb_x][bomb_y] = sprite
 
-  animateMaxCombinationSize: (maxCombination) ->
+  animateMaxCombination: (maxCombination) ->
     # Star's size is increasing
-    @.stopCombinationAnimationSize() if @combination_animation_size_started
+    @.stopCombinationAnimation() if @combination_animation_started
 
-    @combination_animation_size_started = Date.now()
-
-    for x in [0 .. settings.mapSize - 1]
-      for y in [0 .. settings.mapSize - 1]
-        if maxCombination[x][y]
-
-          sprite = PIXI.Sprite.fromImage(preloader.paths.star) 
-
-          sprite.position.x = @.gridToScene(x)
-          sprite.position.y = @.gridToScene(y)
-          sprite.anchor.x = 0.5 
-          sprite.anchor.y = 0.5
-
-          sprite.maxCombSize = true
-
-          @max_comb_components.push(sprite)
-
-          @interface_layer.addChild(sprite)
-
-  stopCombinationAnimationSize: ->
-    for sprite in @max_comb_components
-      @interface_layer.removeChild(sprite)
-
-    @max_comb_components = []
-
-  animateMaxCombinationAlpha: (maxCombination) ->
-    # Star's alpha is decreasing
-    @.stopCombinationAnimationAlpha() if @combination_animation_alpha_started
-
-    @combination_animation_alpha_started = Date.now()
+    @combination_animation_started = Date.now()
 
     for x in [0 .. settings.mapSize - 1]
       for y in [0 .. settings.mapSize - 1]
@@ -409,58 +383,37 @@ window.LevelAnimator = class extends Animator
           sprite.anchor.x = 0.5 
           sprite.anchor.y = 0.5
 
-          sprite.maxCombAlpha = true
+          # sprite.maxCombSize = true
 
           @max_comb_components.push(sprite)
 
-          @interface_layer.addChild(sprite)
+          @max_comb_layer.addChild(sprite)
 
-  stopCombinationAnimationAlpha: ->
+  stopCombinationAnimation: ->
     for sprite in @max_comb_components
-      @interface_layer.removeChild(sprite)
+      @max_comb_layer.removeChild(sprite)
 
     @max_comb_components = []
 
-  isCombinationAnimationSizeFinished: ->
-    Date.now() - @combination_animation_size_started > @.combinationAnimationSizeSpeed
+  isCombinationAnimationFinished: ->
+    Date.now() - @combination_animation_started > @.combinationAnimationSpeed
 
-  isCombinationAnimationAlphaFinished: ->
-    Date.now() - @combination_animation_alpha_started > @.combinationAnimationAlphaSpeed
+  updateInterfaceSprite: (sprite)->
+    if ((Date.now() >= @combination_animation_started) and (Date.now() - @combination_animation_started <= @.combinationAnimationSpeed / 2))
+      # timer == [begin, (end - begin) / 2]
+      progress = (Date.now() - @combination_animation_started) / @.combinationAnimationSpeed * 2
 
-  updateInterfaceSpriteSize: (sprite)->
-    if sprite.maxCombSize
-      if not @combination_animation_size_started or @.isCombinationAnimationSizeFinished()
-        sprite.scale.x = 0
-        sprite.scale.y = 0
+      sprite.scale.x = progress * 50 / 256
+      sprite.scale.y = progress * 50 / 256
 
-        delete sprite.maxCombSize
+      sprite.alpha = 1
+    else
+      if (Date.now() - @combination_animation_started >= @.combinationAnimationSpeed / 2) and not @.isCombinationAnimationFinished()
+        # timer == [(end - begin) / 2, end]
+        progress = (Date.now() - @combination_animation_started - @.combinationAnimationSpeed / 2) / @.combinationAnimationSpeed * 2
 
-        # for sprite in @max_comb_components
-        #   @interface_layer.removeChild(sprite)
-
-        # @max_comb_components = []
-      else
-        progress = (Date.now() - @combination_animation_size_started) / @.combinationAnimationSizeSpeed
-
-        sprite.scale.x = progress * 50 / 256
-        sprite.scale.y = progress * 50 / 256
-
-  updateInterfaceSpriteAlpha: (sprite)->
-    if sprite.maxCombAlpha
-      if not @combination_animation_alpha_started or @.isCombinationAnimationAlphaFinished()
-        sprite.alpha = 0
-
-        delete sprite.maxCombAlpha
-
-        # for sprite in @max_comb_components
-        #   @interface_layer.removeChild(sprite)
-
-        # @max_comb_components = []
-      else
-        progress = (Date.now() - @combination_animation_alpha_started) / @.combinationAnimationAlphaSpeed
-
-        sprite.width = 50
-        sprite.height = 50
+        sprite.scale.x = 50 / 256
+        sprite.scale.y = 50 / 256
 
         sprite.alpha = 1 - progress
 

@@ -182,8 +182,7 @@ window.LevelController = class extends BaseController
                     if currentCombination[i][j]
                       busy_map[i][j] = currentCombination[i][j]
 
-        @animator.animateMaxCombinationSize(maxCombination)
-        @animator.animateMaxCombinationAlpha(maxCombination)
+        @animator.animateMaxCombination(maxCombination)
         
   onMouseDown: (e)=>
     e.preventDefault()
