@@ -8,8 +8,8 @@ window.LevelAnimator = class extends Animator
   explosionAnimationSpeed: 200
   affectedAnimationSpeed: 300
   collectedAnimationSpeed: 500
-#  bombAnimationSpeed: 1000
-  combinationAnimationSpeed: 1000
+  combinationAnimationSizeSpeed: 1000
+  combinationAnimationAlphaSpeed: 1000
 
   timerStyle:
     normal:
@@ -50,6 +50,7 @@ window.LevelAnimator = class extends Animator
     @ingredients = []
     @potion_components = []
     @collecting = []
+    @max_comb_components = []
 
   prepareTextures: ->
     return unless @.loops?
@@ -128,8 +129,11 @@ window.LevelAnimator = class extends Animator
       if @collected_animation_started and @.isCollectedAnimationFinished()
         @collected_animation_started = null
 
-      if @combination_animation_started and @.isCombinationAnimationFinished() #
-        @combination_animation_started = null #
+      if @combination_animation_size_started and @.isCombinationAnimationSizeFinished() #
+        @combination_animation_size_started = null #
+
+      if @combination_animation_alpha_started and @.isCombinationAnimationAlphaFinished() #
+        @combination_animation_alpha_started = null #
 
       @.updateSpriteStates()
 
@@ -155,11 +159,10 @@ window.LevelAnimator = class extends Animator
     @.createBonusSlider(@controller.score) #
 
     for sprite in @interface_layer.children #
-      @.updateInterfaceSprite(sprite) #
-    # if @bomb_animation_started
-    #   @.animateBomb()
-    
-    # @bonus.setText("Hi " + @controller.timer.currentValue()) #
+      @.updateInterfaceSpriteSize(sprite) #
+
+    for sprite in @interface_layer.children #
+      @.updateInterfaceSpriteAlpha(sprite) #
 
   createIngredientSprite: (ingredient)->
     sprite = new PIXI.MovieClip(@.loops["ingredient_#{ ingredient.type }"].textures)
@@ -251,9 +254,6 @@ window.LevelAnimator = class extends Animator
 
         sprite.position.y = @.gridToScene(sprite.source.y - (1 - progress) * sprite.affected_displacement)
 
-    # if sprite.bombing
-    #   if 
-    
     sprite.gotoAndStop(
       if sprite.source.selected then 1 else 0
     )
@@ -347,9 +347,6 @@ window.LevelAnimator = class extends Animator
 
     @interface_layer.addChild(@bonus)
 
-  # isBombAnimationFinished: ->
-  #   Date.now() - @bomb_animation_started > @.bombAnimationSpeed
-
   animateBomb: (bomb_x, bomb_y) ->
     @bomb_animation_started = Date.now()
 
@@ -366,8 +363,11 @@ window.LevelAnimator = class extends Animator
     @ingredients[bomb_x] ?= []
     @ingredients[bomb_x][bomb_y] = sprite
 
-  animateMaxCombination: (maxCombination) ->
-    @combination_animation_started = Date.now()
+  animateMaxCombinationSize: (maxCombination) ->
+    # Star's size is increasing
+    @.stopCombinationAnimationSize() if @combination_animation_size_started
+
+    @combination_animation_size_started = Date.now()
 
     for x in [0 .. settings.mapSize - 1]
       for y in [0 .. settings.mapSize - 1]
@@ -380,30 +380,88 @@ window.LevelAnimator = class extends Animator
           sprite.anchor.x = 0.5 
           sprite.anchor.y = 0.5
 
-          sprite.maxComb = true
+          sprite.maxCombSize = true
+
+          @max_comb_components.push(sprite)
 
           @interface_layer.addChild(sprite)
 
-    # # Star's size is increasing
-    # # Star's alpha is decreasing
-    # @.drawDecreasingAlpha()
-    # # It's able after max combination's lighting
-    # @.endLight()
+  stopCombinationAnimationSize: ->
+    for sprite in @max_comb_components
+      @interface_layer.removeChild(sprite)
 
-  isCombinationAnimationFinished: ->
-    Date.now() - @combination_animation_started > @.combinationAnimationSpeed
+    @max_comb_components = []
 
-  updateInterfaceSprite: (sprite)->
-    if sprite.maxComb
-      if not @combination_animation_started or @.isCombinationAnimationFinished()
+  animateMaxCombinationAlpha: (maxCombination) ->
+    # Star's alpha is decreasing
+    @.stopCombinationAnimationAlpha() if @combination_animation_alpha_started
+
+    @combination_animation_alpha_started = Date.now()
+
+    for x in [0 .. settings.mapSize - 1]
+      for y in [0 .. settings.mapSize - 1]
+        if maxCombination[x][y]
+
+          sprite = PIXI.Sprite.fromImage(preloader.paths.star) 
+
+          sprite.position.x = @.gridToScene(x)
+          sprite.position.y = @.gridToScene(y)
+          sprite.anchor.x = 0.5 
+          sprite.anchor.y = 0.5
+
+          sprite.maxCombAlpha = true
+
+          @max_comb_components.push(sprite)
+
+          @interface_layer.addChild(sprite)
+
+  stopCombinationAnimationAlpha: ->
+    for sprite in @max_comb_components
+      @interface_layer.removeChild(sprite)
+
+    @max_comb_components = []
+
+  isCombinationAnimationSizeFinished: ->
+    Date.now() - @combination_animation_size_started > @.combinationAnimationSizeSpeed
+
+  isCombinationAnimationAlphaFinished: ->
+    Date.now() - @combination_animation_alpha_started > @.combinationAnimationAlphaSpeed
+
+  updateInterfaceSpriteSize: (sprite)->
+    if sprite.maxCombSize
+      if not @combination_animation_size_started or @.isCombinationAnimationSizeFinished()
         sprite.scale.x = 0
         sprite.scale.y = 0
 
-        delete sprite.maxComb
+        delete sprite.maxCombSize
+
+        # for sprite in @max_comb_components
+        #   @interface_layer.removeChild(sprite)
+
+        # @max_comb_components = []
       else
-        progress = (Date.now() - @combination_animation_started) / @.combinationAnimationSpeed
+        progress = (Date.now() - @combination_animation_size_started) / @.combinationAnimationSizeSpeed
 
         sprite.scale.x = progress * 50 / 256
         sprite.scale.y = progress * 50 / 256
+
+  updateInterfaceSpriteAlpha: (sprite)->
+    if sprite.maxCombAlpha
+      if not @combination_animation_alpha_started or @.isCombinationAnimationAlphaFinished()
+        sprite.alpha = 0
+
+        delete sprite.maxCombAlpha
+
+        # for sprite in @max_comb_components
+        #   @interface_layer.removeChild(sprite)
+
+        # @max_comb_components = []
+      else
+        progress = (Date.now() - @combination_animation_alpha_started) / @.combinationAnimationAlphaSpeed
+
+        sprite.width = 50
+        sprite.height = 50
+
+        sprite.alpha = 1 - progress
 
 # <--
