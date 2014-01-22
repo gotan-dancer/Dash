@@ -403,8 +403,8 @@ window.LevelAnimator = class extends Animator
       # timer == [begin, (end - begin) / 2]
       progress = (Date.now() - @combination_animation_started) / @.combinationAnimationSpeed * 2
 
-      sprite.scale.x = progress * 50 / 256
-      sprite.scale.y = progress * 50 / 256
+      sprite.scale.x = progress #* 50 / 256
+      sprite.scale.y = progress #* 50 / 256
 
       sprite.alpha = 1
     else
@@ -412,8 +412,8 @@ window.LevelAnimator = class extends Animator
         # timer == [(end - begin) / 2, end]
         progress = (Date.now() - @combination_animation_started - @.combinationAnimationSpeed / 2) / @.combinationAnimationSpeed * 2
 
-        sprite.scale.x = 50 / 256
-        sprite.scale.y = 50 / 256
+        sprite.scale.x = 1 #50 / 256
+        sprite.scale.y = 1 #50 / 256
 
         sprite.alpha = 1 - progress
 
