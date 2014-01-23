@@ -49,6 +49,8 @@ window.IngredientMap = class
       for y in [0 .. settings.mapSize - 1]
         @explode_map[x][y] = false
 
+    # step_count = 0
+
     @.solve(selected_position_x, selected_position_y, selected_type)
 
     solve_count = 0
@@ -78,6 +80,46 @@ window.IngredientMap = class
     @.solve(x,y-1,selected_type)
     @.solve(x,y+1,selected_type)
 
+    # Find exploding fields using recursion
+    # step_count = step_count + 1
+
+    # if step_count > 10
+    #   return
+
+    # if x < 0 or x > settings.mapSize - 1 or y < 0 or y > settings.mapSize - 1
+    #   return
+
+    # if @ingredients[x][y].type == selected_type
+    #   @explode_map[x][y] = true
+
+    # if ((x-1 >= 0) and (@ingredients[x-1][y].type == selected_type))
+    #   left  = true
+    # else
+    #   left  = false
+
+    # if ((y-1 >= 0) and (@ingredients[x][y-1].type == selected_type)) 
+    #   down  = true
+    # else
+    #   down  = false
+
+    # if ((x+1 <= settings.mapSize - 1) and (@ingredients[x+1][y].type == selected_type))
+    #   right = true
+    # else
+    #   right = false
+
+    # if ((y+1 <= settings.mapSize - 1) and (@ingredients[x][y+1].type == selected_type))
+    #   up    = true
+    # else
+    #   up    = false
+    
+    # if (left or down or right or up) == false
+    #   return
+
+    # @.solve(x-1,y,selected_type,step_count)
+    # @.solve(x,y-1,selected_type,step_count)
+    # @.solve(x+1,y,selected_type,step_count)
+    # @.solve(x,y+1,selected_type,step_count)
+
   getExplodingIngredients: (selected_position_x, selected_position_y) ->
 
     result = null
@@ -85,23 +127,6 @@ window.IngredientMap = class
     result = @explode_map if @.hasMatches(selected_position_x, selected_position_y) > 2
 
     result
-
-  # checkAffectedIngredients: ->
-  #   # Moving blocks down
-  #   for y in [settings.mapSize - 1 .. 1]
-  #     for x in [0 .. settings.mapSize - 1]
-  #       affected = []
-  #       if @explode_map[x][y] #
-  #         for z in [y .. 1]
-  #           @ingredients[x][z].type = @ingredients[x][z-1].type
-  #           @explode_map[x][z] = @explode_map[x][z-1]
-  #           @animator.animateAffected([@ingredients.get(x,z),1])
-
-  #   for x in [0 .. settings.mapSize - 1]
-  #     if @explode_map[x][0]
-  #       @ingredients[x][0].type = Ingredient.randomType()
-  #       @explode_map[x][0] = false
-  #       @animator.animateAffected([@ingredients.get(x,0),1])
 
   calculateExplodingScore: ->
     result = 0

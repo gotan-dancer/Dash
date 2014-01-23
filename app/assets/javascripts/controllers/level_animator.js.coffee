@@ -133,11 +133,6 @@ window.LevelAnimator = class extends Animator
       if @combination_animation_started and @.isCombinationAnimationFinished() #
         @combination_animation_started = null #
 
-        # @controller.on
-
-      # if @combination_animation_alpha_started and @.isCombinationAnimationAlphaFinished() #
-      #   @combination_animation_alpha_started = null #
-
       @.updateSpriteStates()
 
     super
@@ -163,9 +158,6 @@ window.LevelAnimator = class extends Animator
 
     for star in @max_comb_layer.children #
       @.updateInterfaceSprite(star) #
-
-    # for sprite in @interface_layer.children #
-    #   @.updateInterfaceSpriteAlpha(sprite) #
 
   createIngredientSprite: (ingredient)->
     sprite = new PIXI.MovieClip(@.loops["ingredient_#{ ingredient.type }"].textures)
@@ -403,8 +395,8 @@ window.LevelAnimator = class extends Animator
       # timer == [begin, (end - begin) / 2]
       progress = (Date.now() - @combination_animation_started) / @.combinationAnimationSpeed * 2
 
-      sprite.scale.x = progress #* 50 / 256
-      sprite.scale.y = progress #* 50 / 256
+      sprite.scale.x = progress 
+      sprite.scale.y = progress 
 
       sprite.alpha = 1
     else
@@ -412,8 +404,8 @@ window.LevelAnimator = class extends Animator
         # timer == [(end - begin) / 2, end]
         progress = (Date.now() - @combination_animation_started - @.combinationAnimationSpeed / 2) / @.combinationAnimationSpeed * 2
 
-        sprite.scale.x = 1 #50 / 256
-        sprite.scale.y = 1 #50 / 256
+        sprite.scale.x = 1 
+        sprite.scale.y = 1 
 
         sprite.alpha = 1 - progress
 

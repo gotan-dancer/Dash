@@ -72,8 +72,6 @@ window.LevelController = class extends BaseController
       combinationCount = @ingredients.isCombinations() 
       if combinationCount < 3 
         # Create good combination
-        #alert "Create good combination"
-
         candidateMap = []
 
         for x in [0 .. settings.mapSize - 1]
@@ -133,8 +131,6 @@ window.LevelController = class extends BaseController
           del_x[k] = Math.floor(addCeilCandidate[addCeilIndex[k]] / 9)
           del_y[k] = addCeilCandidate[addCeilIndex[k]] % 9
 
-          #alert del_x[k] + ' ' + del_y[k] + ' ' + addCeilMap[del_x[k]][del_y[k]]
-
           @ingredients.get(del_x[k],del_y[k]).type = addCeilMap[del_x[k]][del_y[k]]
           @animator.animateIngredientSwap(@ingredients.get(del_x[k],del_y[k])) 
 
@@ -142,8 +138,6 @@ window.LevelController = class extends BaseController
       combinationCount = @ingredients.isCombinations() 
       if combinationCount != 0
         # Wait 5 seconds for max combination's lighting
-        #alert combinationCount
-
         busy_map = []
 
         for x in [0 .. settings.mapSize - 1]
@@ -289,14 +283,14 @@ window.LevelController = class extends BaseController
 
       @ingredients.get(bomb_x,bomb_y).type = 'bomb' #
 
-      #alert bomb_x + " " + bomb_y + " " + @ingredients.get(bomb_x,bomb_y).type #
-
   checkAffected: ->
+
+    affected = []
     
     for y in [settings.mapSize - 1 .. 1]
       repeat_flag = true
 
-      affected = []
+      # affected = []
 
       while repeat_flag
         for x in [0 .. settings.mapSize - 1]
@@ -316,15 +310,19 @@ window.LevelController = class extends BaseController
           else
             repeat_flag = false
 
-      @animator.animateAffected(affected)
+      # @animator.animateAffected(affected)
+
+    @animator.animateAffected(affected)
 
     @ingredients.clearMap()
 
   checkAffectedIngredients: ->
     # Moving blocks down
+    affected = []
+
     for y in [settings.mapSize - 1 .. 1]
       for x in [0 .. settings.mapSize - 1]
-        affected = []
+        # affected = []
         if @exploding[x][y] #
           for z in [y .. 1]
             @ingredients.get(x,z).type = @ingredients.get(x,z-1).type
@@ -335,16 +333,19 @@ window.LevelController = class extends BaseController
 
             affected.push([@ingredients.get(x,z),1])
 
-            @animator.animateAffected(affected)
+            # @animator.animateAffected(affected)
 
     for x in [0 .. settings.mapSize - 1]
-      affected = []
+      # affected = []
       if @exploding[x][0]
         @ingredients.get(x,0).type = Ingredient.randomType()
         @exploding[x][0] = false
         affected.push([@ingredients.get(x,0),1])
-        @animator.animateAffected(affected)
+        # @animator.animateAffected(affected)
 
+    @animator.animateAffected(affected)
+
+    @ingredients.clearMap()
 
   updatePotion: ->
     return unless @potion.isComplete()
