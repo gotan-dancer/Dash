@@ -267,6 +267,9 @@ window.LevelAnimator = class extends Animator
   gridToScene: (coordinate)->
     @.ingredientGridOffset + coordinate * @.ingredientSize
 
+  sceneToGrid: (cell)->
+    (cell - @.ingredientGridOffset) / @.ingredientSize
+
   isSwapAnimationFinished: ->
     Date.now() - @swap_animation_started > @.swapAnimationSpeed
 
@@ -345,8 +348,13 @@ window.LevelAnimator = class extends Animator
   animateBomb: (bomb_x, bomb_y) ->
     @bomb_animation_started = Date.now()
 
+    for bomb_cell in @ingredient_layer.children
+      if bomb_x == @.sceneToGrid(bomb_cell.position.x) and bomb_y == @.sceneToGrid(bomb_cell.position.y)
+        @ingredient_layer.removeChild(bomb_cell)
+
+        break
+
     sprite = new PIXI.MovieClip(@.loops["ingredient_bomb"].textures)
-    #sprite = PIXI.Sprite.fromImage(preloader.paths.bomb)
     sprite.position.x = @.gridToScene(bomb_x)
     sprite.position.y = @.gridToScene(bomb_y)
     sprite.anchor.x = 0.5
@@ -374,8 +382,6 @@ window.LevelAnimator = class extends Animator
           sprite.position.y = @.gridToScene(y)
           sprite.anchor.x = 0.5 
           sprite.anchor.y = 0.5
-
-          # sprite.maxCombSize = true
 
           @max_comb_components.push(sprite)
 
