@@ -285,67 +285,18 @@ window.LevelController = class extends BaseController
 
   checkAffected: ->
 
-    affected = []
-    
-    for y in [settings.mapSize - 1 .. 1]
-      repeat_flag = true
+    # for ingredient in @exploding # ?
+    #   ingredient.exploding = false # ?
 
-      # affected = []
+    # collected = @potion.checkCollectedIngredients(@exploding)
 
-      while repeat_flag
-        for x in [0 .. settings.mapSize - 1]
-          if @exploding[x][y]
-            repeat_flag = true
-            for z in [y .. 1]
-              @ingredients.get(x,z).type = @ingredients.get(x,z-1).type
-              @exploding[x][z] = @exploding[x][z-1]
+    # @animator.animateCollected(collected)
 
-              affected.push([@ingredients.get(x,z),1])
-
-            @ingredients.get(x,0).type = Ingredient.randomType()
-            @exploding[x][0] = false
-
-            affected.push([@ingredients.get(x,0),1])
-
-          else
-            repeat_flag = false
-
-      # @animator.animateAffected(affected)
+    affected = @ingredients.checkAffectedIngredients(@exploding)
 
     @animator.animateAffected(affected)
 
-    @ingredients.clearMap()
-
-  checkAffectedIngredients: ->
-    # Moving blocks down
-    affected = []
-
-    for y in [settings.mapSize - 1 .. 1]
-      for x in [0 .. settings.mapSize - 1]
-        # affected = []
-        if @exploding[x][y] #
-          for z in [y .. 1]
-            @ingredients.get(x,z).type = @ingredients.get(x,z-1).type
-            @exploding[x][z] = @exploding[x][z-1]
-
-            # if z-1 == 0
-            #   @exploding[x][z-1] = false
-
-            affected.push([@ingredients.get(x,z),1])
-
-            # @animator.animateAffected(affected)
-
-    for x in [0 .. settings.mapSize - 1]
-      # affected = []
-      if @exploding[x][0]
-        @ingredients.get(x,0).type = Ingredient.randomType()
-        @exploding[x][0] = false
-        affected.push([@ingredients.get(x,0),1])
-        # @animator.animateAffected(affected)
-
-    @animator.animateAffected(affected)
-
-    @ingredients.clearMap()
+    # @exploding = null
 
   updatePotion: ->
     return unless @potion.isComplete()
