@@ -296,7 +296,7 @@ window.LevelController = class extends BaseController
 
     @animator.animateAffected(affected)
 
-    # @exploding = null
+    @exploding = null
 
   updatePotion: ->
     return unless @potion.isComplete()

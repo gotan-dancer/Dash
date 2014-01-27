@@ -156,6 +156,13 @@ window.IngredientMap = class
           else
             repeat_flag = false
 
+    for x in [0 .. settings.mapSize-1]
+      if exploded[x][0]
+        @ingredients[x][0].type = Ingredient.randomType()
+        exploded[x][0] = false
+
+        affected.push([@ingredients[x][0],1])
+
     @.clearMap()
 
     affected
