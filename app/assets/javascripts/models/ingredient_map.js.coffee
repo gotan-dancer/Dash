@@ -129,43 +129,104 @@ window.IngredientMap = class
 
     result
 
-
-
   checkAffectedIngredients: (exploded)->
 
     affected = []
+
+    displace = []
+    for x in [0 .. settings.mapSize - 1]
+      displace[x] = []
+      for y in [0 .. settings.mapSize - 1]
+        displace[x][y] = 0
+
+    first_line_flag = []
+    for x in [0 .. settings.mapSize - 1]
+      first_line_flag[x] = false
     
     for y in [settings.mapSize - 1 .. 1]
-      repeat_flag = true
+      for x in [0 .. settings.mapSize - 1]
+        if exploded[x][y]
+          # repeat_flag = true
+          first_line_flag[x] = true
 
-      while repeat_flag
-        for x in [0 .. settings.mapSize - 1]
-          if exploded[x][y]
-            repeat_flag = true
-            for z in [y .. 1]
-              @ingredients[x][z].type = @ingredients[x][z-1].type
-              exploded[x][z] = exploded[x][z-1]
+          # First step
+          for z in [y .. 1]
+            @ingredients[x][z].type = @ingredients[x][z-1].type
+            exploded[x][z] = exploded[x][z-1]
+            displace[x][z] = 1 #
 
-              affected.push([@ingredients[x][z],1])
+            # affected.push([@ingredients[x][z],1])
 
-            @ingredients[x][0].type = Ingredient.randomType()
-            exploded[x][0] = false
+          @ingredients[x][0].type = Ingredient.randomType()
+          exploded[x][0] = false
+          displace[x][0] = 1 #
 
-            affected.push([@ingredients[x][0],1])
+          # affected.push([@ingredients[x][0],1])
 
-          else
-            repeat_flag = false
+          # Next steps
+          for z in [y .. 1]
+            if exploded[x][z]
+              for k in [z .. 1]
+                @ingredients[x][k].type = @ingredients[x][k-1].type
+                exploded[x][k] = exploded[x][k-1] #
+                displace[x][k] = displace[x][k-1] + 1
+
+              @ingredients[x][0].type = Ingredient.randomType()
+              exploded[x][0] = false 
+              displace[x][0] = 1
+
+        # else
+        #   repeat_flag = false
+
+        for z in [y .. 1]
+          affected.push([@ingredients[x][z],displace[x][z]])
 
     for x in [0 .. settings.mapSize-1]
-      if exploded[x][0]
+      if first_line_flag[x]
         @ingredients[x][0].type = Ingredient.randomType()
-        exploded[x][0] = false
+        # exploded[x][0] = false
 
         affected.push([@ingredients[x][0],1])
 
     @.clearMap()
 
     affected
+
+  # checkAffectedIngredients: (exploded)->
+
+  #   affected = []
+    
+  #   for y in [settings.mapSize - 1 .. 1]
+  #     repeat_flag = true
+
+  #     while repeat_flag
+  #       for x in [0 .. settings.mapSize - 1]
+  #         if exploded[x][y]
+  #           repeat_flag = true
+  #           for z in [y .. 1]
+  #             @ingredients[x][z].type = @ingredients[x][z-1].type
+  #             exploded[x][z] = exploded[x][z-1]
+
+  #             affected.push([@ingredients[x][z],1])
+
+  #           @ingredients[x][0].type = Ingredient.randomType()
+  #           exploded[x][0] = false
+
+  #           affected.push([@ingredients[x][0],1])
+
+  #         else
+  #           repeat_flag = false
+
+  #   for x in [0 .. settings.mapSize-1]
+  #     if exploded[x][0]
+  #       @ingredients[x][0].type = Ingredient.randomType()
+  #       exploded[x][0] = false
+
+  #       affected.push([@ingredients[x][0],1])
+
+  #   @.clearMap()
+
+  #   affected
 
   # checkAffectedIngredients: (exploded) ->
   #   displacements = []
