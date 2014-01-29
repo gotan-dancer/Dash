@@ -281,16 +281,9 @@ window.LevelController = class extends BaseController
 
       @animator.animateBomb(bomb_x, bomb_y) #
 
-      @ingredients.get(bomb_x,bomb_y).type = 'bomb' #
+      @ingredients.get(bomb_x,bomb_y).type = 'bomb'
 
   checkAffected: ->
-
-    # for ingredient in @exploding # ?
-    #   ingredient.exploding = false # ?
-
-    # collected = @potion.checkCollectedIngredients(@exploding)
-
-    # @animator.animateCollected(collected)
 
     affected = @ingredients.checkAffectedIngredients(@exploding)
 
@@ -314,7 +307,7 @@ window.LevelController = class extends BaseController
     @.checkMatches()
 
   onExplosionAnimationFinished: ->
-    @.checkAffected() #
+    @.checkAffected()
     @.updatePotion()
 
   onAffectedAnimationFinished: ->

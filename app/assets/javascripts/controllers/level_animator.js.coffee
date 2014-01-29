@@ -130,8 +130,8 @@ window.LevelAnimator = class extends Animator
       if @collected_animation_started and @.isCollectedAnimationFinished()
         @collected_animation_started = null
 
-      if @combination_animation_started and @.isCombinationAnimationFinished() #
-        @combination_animation_started = null #
+      if @combination_animation_started and @.isCombinationAnimationFinished()
+        @combination_animation_started = null
 
       @.updateSpriteStates()
 
@@ -154,10 +154,10 @@ window.LevelAnimator = class extends Animator
 
     @score.setText(@controller.score)
 
-    @.createBonusSlider(@controller.score) #
+    @.createBonusSlider(@controller.score)
 
-    for star in @max_comb_layer.children #
-      @.updateInterfaceSprite(star) #
+    for star in @max_comb_layer.children
+      @.updateInterfaceSprite(star)
 
   createIngredientSprite: (ingredient)->
     sprite = new PIXI.MovieClip(@.loops["ingredient_#{ ingredient.type }"].textures)
@@ -329,8 +329,6 @@ window.LevelAnimator = class extends Animator
 
   isBlockingAnimationInProgress: ->
     @swap_animation_started or @explosion_animation_started or @affected_animation_started
-
-# -->
 
   createBonusSlider: (score)->
     @bonus = new PIXI.Graphics()
